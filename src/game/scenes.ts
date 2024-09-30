@@ -1,3 +1,5 @@
+import { useGameStateStore } from "@/stores/gameState";
+
 const scenes: Scene[] = [
   {
     id: "intro",
@@ -12,7 +14,9 @@ const scenes: Scene[] = [
     choices: [
       {
         text: "Next",
-        action: () => {},
+        action: () => {
+          useGameStateStore().playerHealth -= 1;
+        },
         nextSceneId: "dialogue2",
       },
     ],
@@ -24,7 +28,9 @@ const scenes: Scene[] = [
     choices: [
       {
         text: "Next",
-        action: () => {},
+        action: () => {
+          useGameStateStore().playerMoney += 3;
+        },
         nextSceneId: "dialogue1",
       },
     ],

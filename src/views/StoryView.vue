@@ -5,6 +5,7 @@ import SceneText from "@/components/SceneText.vue";
 import SceneChoices from "@/components/SceneChoices.vue";
 import { useGameStateStore } from "@/stores/gameState";
 import { getScene, type Scene, type Choice } from "@/game/scenes";
+import BattleDisplay from "@/components/BattleDisplay.vue";
 
 const gameState = useGameStateStore();
 const sceneData = computed<Scene>(() => getScene(gameState.sceneId));
@@ -16,6 +17,12 @@ function onChoice(choice: Choice): void {
 
 <template>
   <ResourceDisplay></ResourceDisplay>
-  <SceneText :sceneData="sceneData"></SceneText>
-  <SceneChoices :sceneData="sceneData" @choice-chosen="onChoice"></SceneChoices>
+  <scene v-if="gameState.battle === null">
+    <SceneText :sceneData="sceneData"></SceneText>
+    <SceneChoices
+      :sceneData="sceneData"
+      @choice-chosen="onChoice"
+    ></SceneChoices>
+  </scene>
+  <BattleDisplay v-if="gameState.battle !== null"></BattleDisplay>
 </template>
