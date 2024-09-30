@@ -1,5 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { type Scene, type Choice } from "@/game/scenes";
+
+defineProps<{ sceneData: Scene }>();
+</script>
 
 <template>
-  <div>SceneChoices</div>
+  <div v-for="choice in sceneData.choices" :key="choice.text">
+    <button
+      @click="
+        choice.action();
+        $emit('choice-chosen', choice);
+      "
+    >
+      {{ choice.text }}
+    </button>
+  </div>
 </template>
