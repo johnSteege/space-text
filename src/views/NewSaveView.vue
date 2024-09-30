@@ -9,7 +9,7 @@ function newSave(ship: string): void {
   gameState.reset();
   gameState.sceneId = "intro";
 
-  router.push("/game");
+  router.push("/game/story");
 }
 </script>
 
