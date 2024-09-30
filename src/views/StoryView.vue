@@ -24,5 +24,8 @@ function onChoice(choice: Choice): void {
       @choice-chosen="onChoice"
     ></SceneChoices>
   </scene>
-  <BattleDisplay v-if="gameState.battle !== null"></BattleDisplay>
+  <BattleDisplay
+    v-if="gameState.battle !== null"
+    :battle="gameState.battle"
+  ></BattleDisplay>
 </template>

@@ -1,4 +1,6 @@
 import { useGameStateStore } from "@/stores/gameState";
+import { newBattle } from "./battle";
+import { enemies } from "./enemies";
 
 const scenes: Scene[] = [
   {
@@ -32,6 +34,13 @@ const scenes: Scene[] = [
           useGameStateStore().playerMoney += 3;
         },
         nextSceneId: "dialogue1",
+      },
+      {
+        text: "Battle",
+        action: () => {
+          useGameStateStore().battle = newBattle(enemies.slug_1);
+        },
+        nextSceneId: "",
       },
     ],
   },
