@@ -42,6 +42,10 @@ export const playerShipTemplates: Record<string, ShipTemplate> = {
         name: "Laser 1",
         damage: 1,
       },
+      {
+        name: "Missile 1",
+        damage: 2,
+      },
     ],
   },
 };
