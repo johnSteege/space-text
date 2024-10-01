@@ -1,17 +1,13 @@
-import { type Enemy, type EnemyTemplate } from "./enemies";
+import type { ShipInstance, ShipTemplate } from "./ships";
+import { buildShip } from "./ships";
 
 export type Battle = {
-  enemy: Enemy;
+  enemy: ShipInstance;
 };
 
-export function newBattle(enemyTemplate: EnemyTemplate): Battle {
+export function newBattle(enemyTemplate: ShipTemplate): Battle {
+  const enemy: ShipInstance = buildShip(enemyTemplate);
   return {
-    enemy: {
-      template: enemyTemplate,
-      health: enemyTemplate.maxHealth,
-      block: enemyTemplate.block,
-      attack: enemyTemplate.attack,
-      dodge: enemyTemplate.dodge,
-    },
+    enemy,
   };
 }

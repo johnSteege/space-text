@@ -1,29 +1,49 @@
-export type ShipTemplate = {
-  name: string;
-  maxHealth: number;
-  block: number;
-  attack: number;
-  dodge: number;
-  startingWeapons: Weapon[];
-};
-
 export type Weapon = {
   name: string;
   damage: number;
 };
 
-export const ships: Record<string, ShipTemplate> = {
-  ship_1: {
-    name: "Scout",
+export type ShipTemplate = {
+  templateName: string;
+  maxHealth: number;
+  block: number;
+  dodge: number;
+  startingWeapons: Weapon[];
+};
+
+export type ShipInstance = {
+  template: ShipTemplate;
+  name: string;
+  health: number;
+  block: number;
+  dodge: number;
+  weapons: Weapon[];
+};
+
+export function buildShip(template: ShipTemplate): ShipInstance {
+  return {
+    template,
+    name: template.templateName,
+    health: template.maxHealth,
+    block: template.block,
+    dodge: template.dodge,
+    weapons: template.startingWeapons,
+  };
+}
+
+export const playerShipTemplates: Record<string, ShipTemplate> = {
+  scout1: {
+    templateName: "Scout",
     maxHealth: 15,
     block: 1,
-    attack: 1,
     dodge: 1,
     startingWeapons: [
       {
-        name: "Laser",
+        name: "Laser 1",
         damage: 1,
       },
     ],
   },
 };
+
+export const defaultPlayerShip = buildShip(playerShipTemplates.scout1);

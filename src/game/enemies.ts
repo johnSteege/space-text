@@ -1,25 +1,16 @@
-export type Enemy = {
-  template: EnemyTemplate;
-  health: number;
-  block: number;
-  attack: number;
-  dodge: number;
-};
+import { type ShipTemplate } from "./ships";
 
-export type EnemyTemplate = {
-  name: string;
-  maxHealth: number;
-  block: number;
-  attack: number;
-  dodge: number;
-};
-
-export const enemies: Record<string, EnemyTemplate> = {
+export const enemyTemplates: Record<string, ShipTemplate> = {
   slug_1: {
-    name: "Slug Cruiser",
+    templateName: "Slug Cruiser",
     maxHealth: 5,
     block: 1,
-    attack: 1,
     dodge: 1,
+    startingWeapons: [
+      {
+        name: "Laser 1",
+        damage: 1,
+      },
+    ],
   },
 };

@@ -9,10 +9,9 @@ defineProps<{ battle: Battle }>();
 
 <template>
   <div style="margin-top: 10px">
-    <div>{{ battle.enemy.template.name }}</div>
+    <div>{{ battle.enemy.template.templateName }}</div>
     <span class="resource">Health: {{ battle.enemy.health }}</span>
     <span class="resource">Block: {{ battle.enemy.block }}</span>
-    <span class="resource">Attack: {{ battle.enemy.attack }}</span>
     <span class="resource">Dodge: {{ battle.enemy.dodge }}</span>
   </div>
   <div>

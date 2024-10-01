@@ -1,6 +1,6 @@
 import { useGameStateStore } from "@/stores/gameState";
 import { newBattle } from "./battle";
-import { enemies } from "./enemies";
+import { enemyTemplates } from "./enemies";
 
 const scenes: Scene[] = [
   {
@@ -10,6 +10,12 @@ const scenes: Scene[] = [
     choices: [{ text: "Start", action: () => {}, nextSceneId: "dialogue1" }],
   },
   {
+    id: "battle",
+    type: "battle",
+    text: "Battle",
+    choices: [{text: "Continue", action: () => {}, nextSceneId: "dialogue1"}],
+  },
+  {
     id: "dialogue1",
     type: "dialogue",
     text: "dialogue1",
@@ -17,7 +23,7 @@ const scenes: Scene[] = [
       {
         text: "Next",
         action: () => {
-          useGameStateStore().playerHealth -= 1;
+          useGameStateStore().playerMoney += 1;
         },
         nextSceneId: "dialogue2",
       },
@@ -36,11 +42,11 @@ const scenes: Scene[] = [
         nextSceneId: "dialogue1",
       },
       {
-        text: "Battle",
+        text: "Start battle",
         action: () => {
-          useGameStateStore().battle = newBattle(enemies.slug_1);
+          useGameStateStore().battle = newBattle(enemyTemplates.slug_1);
         },
-        nextSceneId: "",
+        nextSceneId: "battle",
       },
     ],
   },
