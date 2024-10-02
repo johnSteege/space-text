@@ -50,8 +50,7 @@ export function startBattle(enemyTemplate: ShipTemplate): void {
 function nextPhase(): void {
   const gameState = useGameStateStore();
 
-  checkIsBattleOver();
-  if (!gameState.isBattle) {
+  if (checkIsBattleOver()) {
     return;
   }
 
@@ -71,7 +70,7 @@ function nextPhase(): void {
   }
 }
 
-function checkIsBattleOver(): void {
+function checkIsBattleOver(): boolean {
   const gameState = useGameStateStore();
 
   if (gameState.playerShip.health <= 0) {
@@ -88,7 +87,7 @@ function checkIsBattleOver(): void {
       },
     ];
 
-    return;
+    return true;
   }
 
   if (gameState.battle.enemy.health <= 0) {
@@ -105,8 +104,10 @@ function checkIsBattleOver(): void {
       },
     ];
 
-    return;
+    return true;
   }
+
+  return false;
 }
 
 function playerAttack(): void {
