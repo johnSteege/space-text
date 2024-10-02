@@ -1,6 +1,6 @@
 import { useGameStateStore } from "@/stores/gameState";
 import type { ShipInstance, ShipTemplate } from "./ships";
-import { buildShip, defaultPlayerShip } from "./ships";
+import { buildShip, nullShip } from "./ships";
 
 type Choice = {
   text: string;
@@ -9,16 +9,31 @@ type Choice = {
 
 export type Battle = {
   enemy: ShipInstance;
-  phase: "intro" | "player" | "enemy" | "summary";
+  phase:
+    | "battleStart"
+    | "playerAttack"
+    | "attackResult"
+    | "playerBlock"
+    | "blockResult"
+    | "battleSummary";
   phaseText: string;
   choices: Choice[];
 };
 
-export function buildBattle(enemyTemplate: ShipTemplate): Battle {
+export const nullBattle: Battle = {
+  enemy: buildShip(nullShip.template),
+  phase: "battleStart",
+  phaseText: "ErRoR - NULL BATTLE",
+  choices: [],
+};
+
+export function startBattle(enemyTemplate: ShipTemplate): void {
+  const gameState = useGameStateStore();
   const enemy: ShipInstance = buildShip(enemyTemplate);
-  return {
+
+  gameState.battle = {
     enemy,
-    phase: "intro",
+    phase: "battleStart",
     phaseText: "A " + enemy.template.templateName + " has appeared!",
     choices: [
       {
@@ -29,100 +44,127 @@ export function buildBattle(enemyTemplate: ShipTemplate): Battle {
       },
     ],
   };
-}
-
-function getBattleState(): Battle {
-  const gameState = useGameStateStore();
-  if (gameState.battle === null) {
-    console.error("No battle found in game state.");
-    return buildBattle(defaultPlayerShip.template);
-  }
-  const battle: Battle = gameState.battle;
-  return battle;
+  gameState.isBattle = true;
 }
 
 function nextPhase(): void {
   const gameState = useGameStateStore();
-  const battle: Battle = getBattleState();
 
-  if (checkIsBattleOver()) {
+  checkIsBattleOver();
+  if (!gameState.isBattle) {
     return;
   }
-  if (battle.phase === "intro") {
-    playerTurn();
-  } else if (battle.phase === "player") {
-    enemyTurn();
-  } else if (battle.phase === "enemy") {
-    playerTurn();
+
+  if (gameState.battle.phase === "battleStart") {
+    playerAttack();
+  } else if (gameState.battle.phase === "playerAttack") {
+    attackResult();
+  } else if (gameState.battle.phase === "attackResult") {
+    playerBlock();
+  } else if (gameState.battle.phase === "playerBlock") {
+    blockResult();
+  } else if (gameState.battle.phase === "blockResult") {
+    playerAttack();
+  } else {
+    gameState.battle.phase = "battleSummary";
+    gameState.battle.phaseText = "ErRoR - Invalid battle phase";
   }
 }
 
-function checkIsBattleOver(): boolean {
+function checkIsBattleOver(): void {
   const gameState = useGameStateStore();
-  const battle: Battle = getBattleState();
 
-  if (battle.enemy.health <= 0) {
-    battle.phase = "summary";
-    battle.phaseText = "The enemy has been defeated!";
-    battle.choices = [
-      {
-        text: "Continue",
-        action: () => {
-          gameState.battle = null;
-          gameState.sceneId = "dialogue1";
-        },
-      },
-    ];
-
-    return true;
-  } else if (gameState.playerShip.health <= 0) {
-    battle.phase = "summary";
-    battle.phaseText = "You have been defeated!";
-    battle.choices = [
+  if (gameState.playerShip.health <= 0) {
+    gameState.battle.phase = "battleSummary";
+    gameState.battle.phaseText = "You have been defeated!";
+    gameState.battle.choices = [
       {
         text: "Game Over",
         action: () => {
-          gameState.battle = null;
+          gameState.isBattle = false;
+          gameState.battle = nullBattle;
           gameState.sceneId = "gameOver";
         },
       },
     ];
 
-    return true;
+    return;
   }
 
-  return false;
+  if (gameState.battle.enemy.health <= 0) {
+    gameState.battle.phase = "battleSummary";
+    gameState.battle.phaseText = "The enemy has been defeated!";
+    gameState.battle.choices = [
+      {
+        text: "Continue",
+        action: () => {
+          gameState.isBattle = false;
+          gameState.battle = nullBattle;
+          gameState.sceneId = "dialogue1";
+        },
+      },
+    ];
+
+    return;
+  }
 }
 
-function playerTurn(): void {
+function playerAttack(): void {
   const gameState = useGameStateStore();
-  const battle: Battle = getBattleState();
 
-  battle.phase = "player";
-  battle.phaseText = "Your Turn";
-  battle.choices = [];
+  gameState.battle.phase = "playerAttack";
+  gameState.battle.phaseText = "Your Turn";
+  gameState.battle.choices = [];
   for (const weapon of gameState.playerShip.weapons) {
-    battle.choices.push({
+    gameState.battle.choices.push({
       text: weapon.name,
       action: () => {
-        battle.enemy.health -= weapon.damage;
+        gameState.battle.enemy.health -= weapon.damage;
         nextPhase();
       },
     });
   }
 }
 
-function enemyTurn(): void {
+function attackResult(): void {
   const gameState = useGameStateStore();
-  const battle: Battle = getBattleState();
 
-  gameState.playerShip.health -= battle.enemy.weapons[0].damage;
-
-  battle.phase = "enemy";
-  battle.phaseText = "Enemy Turn";
-  battle.choices = [
+  gameState.battle.phase = "attackResult";
+  gameState.battle.phaseText = "You did some damage";
+  gameState.battle.choices = [
     {
-      text: "Next",
+      text: "Continue",
+      action: () => {
+        nextPhase();
+      },
+    },
+  ];
+}
+
+function playerBlock(): void {
+  const gameState = useGameStateStore();
+
+  gameState.battle.phase = "playerBlock";
+  gameState.battle.phaseText = "Enemy is attacking";
+  gameState.battle.choices = [
+    {
+      text: "Shields Up",
+      action: () => {
+        gameState.playerShip.health -= gameState.battle.enemy.weapons[0].damage;
+        nextPhase();
+      },
+    },
+  ];
+}
+
+function blockResult(): void {
+  const gameState = useGameStateStore();
+
+  gameState.battle.phase = "blockResult";
+  gameState.battle.phaseText = "You blocked some damage";
+  gameState.battle.choices = [
+    {
+      text: "Continue",
       action: () => {
         nextPhase();
       },

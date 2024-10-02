@@ -17,15 +17,12 @@ function onChoice(choice: Choice): void {
 
 <template>
   <ResourceDisplay></ResourceDisplay>
-  <div v-if="gameState.battle === null">
+  <div v-if="!gameState.isBattle">
     <SceneText :sceneData="sceneData"></SceneText>
     <SceneChoices
       :sceneData="sceneData"
       @choice-chosen="onChoice"
     ></SceneChoices>
   </div>
-  <BattleDisplay
-    v-if="gameState.battle !== null"
-    :battle="gameState.battle"
-  ></BattleDisplay>
+  <BattleDisplay v-if="gameState.isBattle"></BattleDisplay>
 </template>

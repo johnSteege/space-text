@@ -1,5 +1,5 @@
 import { useGameStateStore } from "@/stores/gameState";
-import { buildBattle } from "./battle";
+import { startBattle } from "./battle";
 import { enemyTemplates } from "./enemies";
 import { useRouter } from "vue-router";
 
@@ -41,7 +41,7 @@ const scenes: Scene[] = [
     id: "battle",
     type: "battle",
     text: "Battle",
-    choices: [{ text: "Continue", action: () => {}, nextSceneId: "dialogue1" }],
+    choices: [],
   },
   {
     id: "dialogue1",
@@ -72,7 +72,7 @@ const scenes: Scene[] = [
       {
         text: "Start battle",
         action: () => {
-          useGameStateStore().battle = buildBattle(enemyTemplates.slug_1);
+          startBattle(enemyTemplates.slug_1);
         },
         nextSceneId: "battle",
       },

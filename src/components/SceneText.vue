@@ -5,5 +5,6 @@ defineProps<{ sceneData: Scene }>();
 </script>
 
 <template>
+  <div>SceneText</div>
   <p>{{ sceneData.text }}</p>
 </template>

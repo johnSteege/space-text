@@ -50,4 +50,10 @@ export const playerShipTemplates: Record<string, ShipTemplate> = {
   },
 };
 
-export const defaultPlayerShip = buildShip(playerShipTemplates.scout1);
+export const nullShip = buildShip({
+  templateName: "ErRoR",
+  maxHealth: 1,
+  block: 0,
+  dodge: 0,
+  startingWeapons: [],
+} as ShipTemplate);

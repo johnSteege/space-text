@@ -1,19 +1,21 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { type Battle } from "@/game/battle";
-import { defaultPlayerShip, type ShipInstance } from "@/game/ships";
+import { nullBattle, type Battle } from "@/game/battle";
+import { nullShip, type ShipInstance } from "@/game/ships";
 
 export const useGameStateStore = defineStore("gameState", () => {
   const sceneId = ref("none");
-  const playerShip = ref<ShipInstance>(defaultPlayerShip);
+  const playerShip = ref<ShipInstance>(nullShip);
   const playerMoney = ref(0);
-  const battle = ref<Battle | null>(null);
+  const isBattle = ref(false);
+  const battle = ref<Battle>(nullBattle);
 
   function reset(): void {
     sceneId.value = "none";
-    playerShip.value = defaultPlayerShip;
+    playerShip.value = nullShip;
     playerMoney.value = 0;
-    battle.value = null;
+    isBattle.value = false;
+    battle.value = nullBattle;
   }
 
   return {
@@ -21,6 +23,7 @@ export const useGameStateStore = defineStore("gameState", () => {
     reset,
     playerShip,
     playerMoney,
+    isBattle,
     battle,
   };
 });
