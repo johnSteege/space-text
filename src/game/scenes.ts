@@ -1,6 +1,20 @@
 import { useGameStateStore } from "@/stores/gameState";
-import { newBattle } from "./battle";
+import { buildBattle } from "./battle";
 import { enemyTemplates } from "./enemies";
+import { useRouter } from "vue-router";
+
+export type Choice = {
+  text: string;
+  action: () => void;
+  nextSceneId: string;
+};
+
+export type Scene = {
+  id: string;
+  type: string;
+  text: string;
+  choices: Choice[];
+};
 
 const scenes: Scene[] = [
   {
@@ -10,10 +24,24 @@ const scenes: Scene[] = [
     choices: [{ text: "Start", action: () => {}, nextSceneId: "dialogue1" }],
   },
   {
+    id: "gameOver",
+    type: "gameOver",
+    text: "Game Over",
+    choices: [
+      {
+        text: "Main Menu",
+        action: () => {
+          useRouter().push("/");
+        },
+        nextSceneId: "gameOver",
+      },
+    ],
+  },
+  {
     id: "battle",
     type: "battle",
     text: "Battle",
-    choices: [{text: "Continue", action: () => {}, nextSceneId: "dialogue1"}],
+    choices: [{ text: "Continue", action: () => {}, nextSceneId: "dialogue1" }],
   },
   {
     id: "dialogue1",
@@ -44,26 +72,13 @@ const scenes: Scene[] = [
       {
         text: "Start battle",
         action: () => {
-          useGameStateStore().battle = newBattle(enemyTemplates.slug_1);
+          useGameStateStore().battle = buildBattle(enemyTemplates.slug_1);
         },
         nextSceneId: "battle",
       },
     ],
   },
 ];
-
-export type Scene = {
-  id: string;
-  type: string;
-  text: string;
-  choices: Choice[];
-};
-
-export type Choice = {
-  text: string;
-  action: () => void;
-  nextSceneId: string;
-};
 
 const nullScene: Scene = {
   id: "none",

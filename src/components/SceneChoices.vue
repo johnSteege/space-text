@@ -2,6 +2,7 @@
 import { type Scene, type Choice } from "@/game/scenes";
 
 defineProps<{ sceneData: Scene }>();
+defineEmits(["choice-chosen"]);
 </script>
 
 <template>

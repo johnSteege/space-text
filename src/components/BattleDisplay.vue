@@ -8,7 +8,7 @@ const battle = computed(() => gameState.battle);
 </script>
 
 <template>
-  <battle-display v-if="battle !== null">
+  <div v-if="battle !== null">
     <div style="margin-top: 10px">
       <div>{{ battle.enemy.template.templateName }}</div>
       <span class="resource">Health: {{ battle.enemy.health }}</span>
@@ -16,13 +16,19 @@ const battle = computed(() => gameState.battle);
       <span class="resource">Dodge: {{ battle.enemy.dodge }}</span>
     </div>
     <div>
-      <weapon-display v-for="weapon in gameState.playerShip.weapons"
-        ><button @click="battle.enemy.health -= weapon.damage">
-          {{ weapon.name }}
-        </button>
-      </weapon-display>
+      {{ battle.phase }}
     </div>
-  </battle-display>
+    <div>
+      {{ battle.phaseText }}
+    </div>
+    <div>
+      <div v-for="choice in battle.choices">
+        <button @click="choice.action">
+          {{ choice.text }}
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
