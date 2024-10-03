@@ -16,14 +16,18 @@ export type Battle = {
     | "playerBlock"
     | "blockResult"
     | "battleSummary";
-  phaseText: string;
+  phaseText: string[];
+  phaseAttacker: ShipInstance;
+  phaseBlocker: ShipInstance;
   choices: Choice[];
 };
 
 export const nullBattle: Battle = {
-  enemy: buildShip(nullShip.template),
+  enemy: nullShip,
   phase: "battleStart",
-  phaseText: "ErRoR - NULL BATTLE",
+  phaseText: ["ErRoR - NULL BATTLE"],
+  phaseAttacker: nullShip,
+  phaseBlocker: nullShip,
   choices: [],
 };
 
@@ -34,7 +38,9 @@ export function startBattle(enemyTemplate: ShipTemplate): void {
   gameState.battle = {
     enemy,
     phase: "battleStart",
-    phaseText: "A " + enemy.template.templateName + " has appeared!",
+    phaseText: [`A ${enemy.template.templateName} has appeared!`],
+    phaseAttacker: nullShip,
+    phaseBlocker: nullShip,
     choices: [
       {
         text: "Start Battle",
@@ -66,7 +72,7 @@ function nextPhase(): void {
     playerAttack();
   } else {
     gameState.battle.phase = "battleSummary";
-    gameState.battle.phaseText = "ErRoR - Invalid battle phase";
+    gameState.battle.phaseText = ["ErRoR - Invalid battle phase"];
   }
 }
 
@@ -75,7 +81,7 @@ function checkIsBattleOver(): boolean {
 
   if (gameState.playerShip.health <= 0) {
     gameState.battle.phase = "battleSummary";
-    gameState.battle.phaseText = "You have been defeated!";
+    gameState.battle.phaseText.push("You have been defeated!");
     gameState.battle.choices = [
       {
         text: "Game Over",
@@ -92,7 +98,7 @@ function checkIsBattleOver(): boolean {
 
   if (gameState.battle.enemy.health <= 0) {
     gameState.battle.phase = "battleSummary";
-    gameState.battle.phaseText = "The enemy has been defeated!";
+    gameState.battle.phaseText.push("The enemy has been defeated!");
     gameState.battle.choices = [
       {
         text: "Continue",
@@ -114,13 +120,15 @@ function playerAttack(): void {
   const gameState = useGameStateStore();
 
   gameState.battle.phase = "playerAttack";
-  gameState.battle.phaseText = "Your Turn";
+  gameState.battle.phaseText = ["Your Turn"];
+  gameState.battle.phaseAttacker = gameState.playerShip;
+  gameState.battle.phaseBlocker = gameState.battle.enemy;
   gameState.battle.choices = [];
   for (const weapon of gameState.playerShip.weapons) {
     gameState.battle.choices.push({
       text: weapon.name,
       action: () => {
-        gameState.battle.enemy.health -= weapon.damage;
+        weapon.action();
         nextPhase();
       },
     });
@@ -131,7 +139,7 @@ function attackResult(): void {
   const gameState = useGameStateStore();
 
   gameState.battle.phase = "attackResult";
-  gameState.battle.phaseText = "You did some damage";
+  // gameState.battle.phaseText = "You did some damage";
   gameState.battle.choices = [
     {
       text: "Continue",
@@ -146,12 +154,14 @@ function playerBlock(): void {
   const gameState = useGameStateStore();
 
   gameState.battle.phase = "playerBlock";
-  gameState.battle.phaseText = "Enemy is attacking";
+  gameState.battle.phaseText = ["Enemy is attacking"];
+  gameState.battle.phaseAttacker = gameState.battle.enemy;
+  gameState.battle.phaseBlocker = gameState.playerShip;
   gameState.battle.choices = [
     {
       text: "Shields Up",
       action: () => {
-        gameState.playerShip.health -= gameState.battle.enemy.weapons[0].damage;
+        gameState.battle.enemy.weapons[0].action();
         nextPhase();
       },
     },
@@ -162,7 +172,7 @@ function blockResult(): void {
   const gameState = useGameStateStore();
 
   gameState.battle.phase = "blockResult";
-  gameState.battle.phaseText = "You blocked some damage";
+  // gameState.battle.phaseText = "You blocked some damage";
   gameState.battle.choices = [
     {
       text: "Continue",

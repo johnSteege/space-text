@@ -1,3 +1,4 @@
+import { weapons } from "./shipItems";
 import { type ShipTemplate } from "./ships";
 
 export const enemyTemplates: Record<string, ShipTemplate> = {
@@ -6,11 +7,6 @@ export const enemyTemplates: Record<string, ShipTemplate> = {
     maxHealth: 5,
     block: 1,
     dodge: 1,
-    startingWeapons: [
-      {
-        name: "Laser 1",
-        damage: 1,
-      },
-    ],
+    startingWeapons: [weapons.laser1],
   },
 };

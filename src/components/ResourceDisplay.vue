@@ -10,7 +10,7 @@ const playerShip = computed(() => gameState.playerShip);
   <div>
     <span class="resource"
       >Health:
-      {{ playerShip.health + "/" + playerShip.template.maxHealth }}</span
+      {{ `${playerShip.health}/${playerShip.template.maxHealth}` }}</span
     >
     <span class="resource">Block: {{ playerShip.block }}</span>
     <span class="resource">Dodge: {{ playerShip.dodge }}</span>

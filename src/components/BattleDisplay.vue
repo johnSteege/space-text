@@ -19,7 +19,9 @@ const battle = computed(() => gameState.battle);
       {{ battle.phase }}
     </div>
     <div>
-      {{ battle.phaseText }}
+      <div v-for="text in battle.phaseText" style="margin-bottom: 10px">
+        {{ text }}
+      </div>
     </div>
     <div>
       <div v-for="choice in battle.choices">

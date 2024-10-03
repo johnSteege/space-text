@@ -1,7 +1,4 @@
-export type Weapon = {
-  name: string;
-  damage: number;
-};
+import { weapons, type Weapon } from "./shipItems";
 
 export type ShipTemplate = {
   templateName: string;
@@ -37,16 +34,7 @@ export const playerShipTemplates: Record<string, ShipTemplate> = {
     maxHealth: 15,
     block: 1,
     dodge: 1,
-    startingWeapons: [
-      {
-        name: "Laser 1",
-        damage: 1,
-      },
-      {
-        name: "Missile 1",
-        damage: 2,
-      },
-    ],
+    startingWeapons: [weapons.laser1, weapons.missile1],
   },
 };
 
