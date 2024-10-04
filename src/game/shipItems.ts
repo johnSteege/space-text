@@ -1,4 +1,5 @@
 import { useGameStateStore } from "@/stores/gameState";
+import { randomIntLinear } from "./util";
 
 export type Weapon = {
   name: string;
@@ -7,25 +8,47 @@ export type Weapon = {
 
 export const weapons: Record<string, Weapon> = {
   laser1: {
-    name: "Laser 1",
+    name: "Laser",
     action: () => {
-      fireWeapon(1, 1);
+      fireWeapon(1, 1, 1);
     },
   },
   missile1: {
-    name: "Missile 1",
+    name: "Missile",
     action: () => {
-      fireWeapon(0, 3);
+      fireWeapon(0, 0, 3);
     },
   },
 };
 
-function fireWeapon(minDamage: number, maxDamage: number): void {
+function fireWeapon(
+  accuracyModifier: number,
+  minDamage: number,
+  maxDamage: number
+): void {
   const gameState = useGameStateStore();
 
-  const damage =
-    Math.floor(Math.random() * (maxDamage - minDamage + 1)) + minDamage;
+  const evasion = Math.max(
+    0,
+    gameState.battle.phaseDefender.evasion - accuracyModifier
+  );
+  const hitChance = 100 - 5 * evasion;
+  const evadeRoll = randomIntLinear(0, 100);
 
-  gameState.battle.phaseBlocker.health -= damage;
-  gameState.battle.phaseText = [`${gameState.battle.phaseBlocker.name} took ${damage} damage.`];
+  console.log(`evadeRoll: ${evadeRoll}, hitChance: ${hitChance}`);
+
+  if (evadeRoll > hitChance) {
+    // miss
+    gameState.battle.phaseText = [
+      `${gameState.battle.phaseDefender.name} evaded the attack.`,
+    ];
+    return;
+  }
+
+  const damage = randomIntLinear(minDamage, maxDamage);
+
+  gameState.battle.phaseDefender.health -= damage;
+  gameState.battle.phaseText = [
+    `${gameState.battle.phaseDefender.name} took ${damage} damage.`,
+  ];
 }

@@ -6,7 +6,7 @@ const gameState = useGameStateStore();
 
 <template>
   <div>
-    <span class="resource">Gold: {{ gameState.playerGold }}</span>
+    <span class="resource">Money: {{ gameState.playerMoney }}</span>
     <span class="resource">Weapons: </span>
   </div>
 </template>

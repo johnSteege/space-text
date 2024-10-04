@@ -12,8 +12,8 @@ const battle = computed(() => gameState.battle);
     <div style="margin-top: 10px">
       <div>{{ battle.enemy.template.templateName }}</div>
       <span class="resource">Health: {{ battle.enemy.health }}</span>
-      <span class="resource">Block: {{ battle.enemy.block }}</span>
-      <span class="resource">Dodge: {{ battle.enemy.dodge }}</span>
+      <span class="resource">Shields: {{ battle.enemy.shields }}</span>
+      <span class="resource">Evasion: {{ battle.enemy.evasion }}</span>
     </div>
     <div>
       {{ battle.phase }}

@@ -5,8 +5,8 @@ export const enemyTemplates: Record<string, ShipTemplate> = {
   slug_1: {
     templateName: "Slug Cruiser",
     maxHealth: 5,
-    block: 1,
-    dodge: 1,
+    shields: 1,
+    evasion: 1,
     startingWeapons: [weapons.laser1],
   },
 };
