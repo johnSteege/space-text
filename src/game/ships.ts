@@ -1,4 +1,10 @@
 import { weapons, type Weapon } from "./shipItems";
+import {
+  buildShipSystem,
+  shipSystems,
+  type ShipSystemInstance,
+  type ShipSystemTemplate,
+} from "./shipSystems";
 
 export type ShipTemplate = {
   templateName: string;
@@ -6,6 +12,7 @@ export type ShipTemplate = {
   shields: number;
   evasion: number;
   startingWeapons: Weapon[];
+  startingSystems: { system: ShipSystemTemplate; level: number }[];
 };
 
 export type ShipInstance = {
@@ -15,6 +22,7 @@ export type ShipInstance = {
   shields: number;
   evasion: number;
   weapons: Weapon[];
+  systems: ShipSystemInstance[];
 };
 
 export function buildShip(template: ShipTemplate): ShipInstance {
@@ -25,6 +33,9 @@ export function buildShip(template: ShipTemplate): ShipInstance {
     shields: template.shields,
     evasion: template.evasion,
     weapons: template.startingWeapons,
+    systems: template.startingSystems.map((system) =>
+      buildShipSystem(system.system)
+    ),
   };
 }
 
@@ -35,6 +46,13 @@ export const playerShipTemplates: Record<string, ShipTemplate> = {
     shields: 1,
     evasion: 11,
     startingWeapons: [weapons.laser1, weapons.missile1],
+    startingSystems: [
+      { system: shipSystems.shields, level: 1 },
+      { system: shipSystems.engines, level: 1 },
+      { system: shipSystems.targeting, level: 1 },
+      { system: shipSystems.weapon_loading, level: 1 },
+      { system: shipSystems.power, level: 1 },
+    ],
   },
 };
 
@@ -44,4 +62,5 @@ export const nullShip = buildShip({
   shields: 0,
   evasion: 0,
   startingWeapons: [],
+  startingSystems: [],
 } as ShipTemplate);
