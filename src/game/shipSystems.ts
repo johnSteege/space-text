@@ -32,13 +32,19 @@ export const shipSystems: Record<string, ShipSystemTemplate> = {
     description:
       "Required for operating some types of weapons and other ship systems.",
   },
+  repair: {
+    name: "Repair",
+    description:
+      "Repairs ship systems during battle, but cannot repair damage to the hull.",
+  },
 };
 
 export function buildShipSystem(
-  template: ShipSystemTemplate
+  template: ShipSystemTemplate,
+  level: number
 ): ShipSystemInstance {
   return {
     templateName: template.name,
-    hp: 1,
+    hp: level,
   };
 }
