@@ -11,7 +11,7 @@ const battle = computed(() => gameState.battle);
   <div v-if="battle !== null">
     <div style="margin-top: 10px">
       <div>{{ battle.enemy.template.templateName }}</div>
-      <span class="resource">Health: {{ battle.enemy.health }}</span>
+      <span class="resource">Health: {{ battle.enemy.hp }}</span>
       <span class="resource">Shields: {{ battle.enemy.shields }}</span>
       <span class="resource">Evasion: {{ battle.enemy.evasion }}</span>
     </div>

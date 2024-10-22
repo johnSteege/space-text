@@ -1,4 +1,4 @@
-import { weapons, type Weapon, type ShipItem, shipItems } from "./shipItems";
+import { type ShipItem, shipItems } from "./shipItems";
 import {
   buildShipSystem,
   shipSystems,
@@ -8,22 +8,16 @@ import {
 
 export type ShipTemplate = {
   templateName: string;
-  maxHealth: number;
-  shields: number;
-  evasion: number;
+  maxHp: number;
   startingSystems: { system: ShipSystemTemplate; level: number }[];
-  startingWeapons: Weapon[];
-  startingItems: ShipItem[];
+  startingItems: ShipItem[]; // TODO: add amounts
 };
 
 export type ShipInstance = {
   template: ShipTemplate;
   name: string;
-  health: number;
-  shields: number;
-  evasion: number;
+  hp: number;
   systems: ShipSystemInstance[];
-  weapons: Weapon[];
   items: ShipItem[];
 };
 
@@ -31,13 +25,10 @@ export function buildShip(template: ShipTemplate): ShipInstance {
   return {
     template,
     name: template.templateName,
-    health: template.maxHealth,
-    shields: template.shields,
-    evasion: template.evasion,
+    hp: template.maxHp,
     systems: template.startingSystems.map((system) =>
       buildShipSystem(system.system, system.level)
     ),
-    weapons: template.startingWeapons,
     items: template.startingItems,
   };
 }
@@ -45,26 +36,23 @@ export function buildShip(template: ShipTemplate): ShipInstance {
 export const playerShipTemplates: Record<string, ShipTemplate> = {
   scout1: {
     templateName: "Scout",
-    maxHealth: 15,
-    shields: 1,
-    evasion: 11,
+    maxHp: 15,
     startingSystems: [
       { system: shipSystems.shields, level: 1 },
       { system: shipSystems.engines, level: 1 },
       { system: shipSystems.targeting, level: 1 },
       { system: shipSystems.weapon_loading, level: 1 },
       { system: shipSystems.power, level: 1 },
+      { system: shipSystems.laser1, level: 1 },
+      { system: shipSystems.torpedo1, level: 1 },
     ],
-    startingWeapons: [weapons.laser1, weapons.missile1],
-    startingItems: [shipItems.potion],
+    startingItems: [shipItems.potion, shipItems.torpedo],
   },
 };
 
 export const nullShip = buildShip({
   templateName: "ErRoR",
-  maxHealth: 1,
-  shields: 0,
-  evasion: 0,
+  maxHp: 1,
   startingSystems: [],
   startingWeapons: [],
   startingItems: [],
