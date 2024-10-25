@@ -1,7 +1,7 @@
 import { useGameStateStore } from "@/stores/gameState";
 import { startBattle } from "./battle";
-import { enemyTemplates } from "./enemies";
 import { useRouter } from "vue-router";
+import { enemyTemplates } from "./ships";
 
 export type Choice = {
   text: string;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useGameStateStore } from "@/stores/gameState";
-import { type Battle } from "@/game/battle";
 import { computed } from "vue";
+import { useGameStateStore } from "@/stores/gameState";
+import EnergyAllocation from "./EnergyAllocation.vue";
 
 const gameState = useGameStateStore();
 const battle = computed(() => gameState.battle);
@@ -11,9 +11,9 @@ const battle = computed(() => gameState.battle);
   <div v-if="battle !== null">
     <div style="margin-top: 10px">
       <div>{{ battle.enemy.template.templateName }}</div>
-      <span class="resource">Health: {{ battle.enemy.hp }}</span>
-      <span class="resource">Shields: {{ battle.enemy.shields }}</span>
-      <span class="resource">Evasion: {{ battle.enemy.evasion }}</span>
+      <span class="resource"
+        >Hull: {{ `${battle.enemy.hp}/${battle.enemy.template.maxHp}` }}</span
+      >
     </div>
     <div>
       {{ battle.phase }}
@@ -23,6 +23,9 @@ const battle = computed(() => gameState.battle);
         {{ text }}
       </div>
     </div>
+
+    <EnergyAllocation v-if="battle.phase === 'playerEnergy'">
+    </EnergyAllocation>
     <div>
       <div v-for="choice in battle.choices">
         <button @click="choice.action">

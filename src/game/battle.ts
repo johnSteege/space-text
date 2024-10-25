@@ -1,7 +1,6 @@
 import { useGameStateStore } from "@/stores/gameState";
 import type { ShipInstance, ShipTemplate } from "./ships";
 import { buildShip, nullShip } from "./ships";
-import { randomIntLinear } from "./util";
 
 type Choice = {
   text: string;
@@ -12,6 +11,7 @@ export type Battle = {
   enemy: ShipInstance;
   phase:
     | "battleIntro"
+    | "playerEnergy"
     | "playerTurn"
     | "playerResult"
     | "enemyTurn"
@@ -50,6 +50,8 @@ function nextPhase(): void {
   }
 
   if (gameState.battle.phase === "battleIntro") {
+    playerEnergy();
+  } else if (gameState.battle.phase === "playerEnergy") {
     playerTurn();
   } else if (gameState.battle.phase === "playerTurn") {
     playerResult();
@@ -109,6 +111,14 @@ export function startBattle(enemyTemplate: ShipTemplate): void {
   const gameState = useGameStateStore();
   const enemy: ShipInstance = buildShip(enemyTemplate);
 
+  // Set energy allocated of every system in both ships to 0.
+  gameState.playerShip.systems.forEach((system) => {
+    system.energyAllocated = 0;
+  });
+  enemy.systems.forEach((system) => {
+    system.energyAllocated = 0;
+  });
+
   gameState.battle = {
     enemy,
     phase: "battleIntro",
@@ -125,21 +135,21 @@ export function startBattle(enemyTemplate: ShipTemplate): void {
   gameState.isBattle = true;
 }
 
+function playerEnergy(): void {
+  const gameState = useGameStateStore();
+
+  // This phase is mostly handled in EnergyAllocation.vue
+  gameState.battle.phase = "playerEnergy";
+  gameState.battle.phaseText = ["Allocate Reactor Energy"];
+  gameState.battle.choices = [{ text: "Continue", action: () => nextPhase() }];
+}
+
 function playerTurn(): void {
   const gameState = useGameStateStore();
 
   gameState.battle.phase = "playerTurn";
-  gameState.battle.phaseText = ["Your Turn"];
-  gameState.battle.choices = [];
-  for (const system of gameState.playerShip.systems) {
-    gameState.battle.choices.push({
-      text: system.template.name,
-      action: () => {
-        system.template.action();
-        nextPhase();
-      },
-    });
-  }
+  gameState.battle.phaseText = ["Complete your turn"]; // TODO: show fully powered systems and their actions
+  gameState.battle.choices = [{ text: "Continue", action: () => nextPhase() }];
 }
 
 function playerResult(): void {
@@ -185,36 +195,6 @@ function enemyResult(): void {
         nextPhase();
       },
     },
-  ];
-}
-
-export function fireWeapon(
-  accuracyModifier: number,
-  minDamage: number,
-  maxDamage: number
-): void {
-  const gameState = useGameStateStore();
-
-  // const evasion = Math.max(0, getPhaseDefender().evasion - accuracyModifier);
-  const evasion = Math.max(0, 90 - accuracyModifier);
-  const hitChance = 100 - 5 * evasion;
-  const evadeRoll = randomIntLinear(0, 100);
-
-  console.log(`evadeRoll: ${evadeRoll}, hitChance: ${hitChance}`);
-
-  if (evadeRoll > hitChance) {
-    // miss
-    gameState.battle.phaseText = [
-      `${getPhaseDefender().name} evaded the attack.`,
-    ];
-    return;
-  }
-
-  const damage = randomIntLinear(minDamage, maxDamage);
-
-  getPhaseDefender().hp -= damage;
-  gameState.battle.phaseText = [
-    `${getPhaseDefender().name} took ${damage} damage.`,
   ];
 }
 

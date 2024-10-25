@@ -9,11 +9,9 @@ const playerShip = computed(() => gameState.playerShip);
 <template>
   <div>
     <span class="resource"
-      >Health:
+      >Hull:
       {{ `${playerShip.hp}/${playerShip.template.maxHp}` }}</span
     >
-    <span class="resource">Shields: {{ playerShip.shields }}</span>
-    <span class="resource">Evasion: {{ playerShip.evasion }}</span>
     <span class="resource">Money: {{ gameState.playerMoney }}</span>
   </div>
 </template>
