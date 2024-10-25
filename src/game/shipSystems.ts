@@ -57,6 +57,7 @@ export function fireWeapon(
   ];
 }
 
+// TODO replace these Records with something that provides completion and throws errors if a system is missing
 const weapons: Record<string, ShipSystemTemplate> = {
   laser1: {
     name: "Laser",
