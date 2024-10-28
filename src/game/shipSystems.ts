@@ -1,6 +1,6 @@
 import { useGameStateStore } from "@/stores/gameState";
 import { randomIntLinear } from "./util";
-import { getPhaseDefender } from "./battle";
+import { useBattleStore } from "@/stores/battle";
 
 export type ShipSystemTemplate = {
   name: string;
@@ -14,6 +14,7 @@ export type ShipSystemInstance = {
   template: ShipSystemTemplate;
   hp: number;
   energyAllocated: number;
+  phaseEnergy: number; // Temporary energy during the phase before being applied
 };
 
 export function buildShipSystem(
@@ -24,6 +25,7 @@ export function buildShipSystem(
     template: template,
     hp: level,
     energyAllocated: 0,
+    phaseEnergy: 0,
   };
 }
 
@@ -33,9 +35,9 @@ export function fireWeapon(
   maxDamage: number
 ): void {
   const gameState = useGameStateStore();
+  const battle = useBattleStore();
 
-  // const evasion = Math.max(0, getPhaseDefender().evasion - accuracyModifier);
-  const evasion = Math.max(0, 90 - accuracyModifier);
+  const evasion = Math.max(0, 3 - accuracyModifier);
   const hitChance = 100 - 5 * evasion;
   const evadeRoll = randomIntLinear(0, 100);
 
@@ -43,18 +45,18 @@ export function fireWeapon(
 
   if (evadeRoll > hitChance) {
     // miss
-    gameState.battle.phaseText = [
-      `${getPhaseDefender().name} evaded the attack.`,
-    ];
+    gameState.battle.phaseText.push(
+      `${battle.getPhaseDefender().name} evaded the attack.`
+    );
     return;
   }
 
   const damage = randomIntLinear(minDamage, maxDamage);
 
-  getPhaseDefender().hp -= damage;
-  gameState.battle.phaseText = [
-    `${getPhaseDefender().name} took ${damage} damage.`,
-  ];
+  battle.getPhaseDefender().hp -= damage;
+  gameState.battle.phaseText.push(
+    `${battle.getPhaseDefender().name} took ${damage} damage.`
+  );
 }
 
 // TODO replace these Records with something that provides completion and throws errors if a system is missing

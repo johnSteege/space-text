@@ -18,6 +18,7 @@ export type ShipInstance = {
   name: string;
   hp: number;
   energyPerTurn: number;
+  unallocatedEnergy: number;
   systems: ShipSystemInstance[];
   items: ShipItem[];
 };
@@ -28,6 +29,7 @@ export function buildShip(template: ShipTemplate): ShipInstance {
     name: template.templateName,
     hp: template.maxHp,
     energyPerTurn: 5,
+    unallocatedEnergy: 0,
     systems: template.startingSystems.map((system) =>
       buildShipSystem(system.system, system.level)
     ),
