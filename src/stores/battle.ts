@@ -126,13 +126,13 @@ export const useBattleStore = defineStore("battle", () => {
     phaseName.value = "playerEnergy";
     phaseText.value = ["Allocate Reactor Energy"];
     choices.value = [
-      {
-        text: "Continue",
-        action: () => {
-          applyPhaseEnergy();
-          nextPhase();
-        },
-      },
+      // {
+      //   text: "Continue",
+      //   action: () => {
+      //     applyPhaseEnergy();
+      //     nextPhase();
+      //   },
+      // },
     ];
   }
 
@@ -226,6 +226,7 @@ export const useBattleStore = defineStore("battle", () => {
     choices,
     phaseAttacker,
     phaseDefender,
+    nextPhase,
     startBattle,
     $reset,
   };

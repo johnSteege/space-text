@@ -1,7 +1,24 @@
 <script setup lang="ts">
+import { useBattleStore } from "@/stores/battle";
 import { useGameStateStore } from "@/stores/gameState";
 
 const gameState = useGameStateStore();
+const battle = useBattleStore();
+
+function canContinue(): boolean {
+  if (gameState.playerShip.unallocatedEnergy <= 0) {
+    return true;
+  }
+  gameState.playerShip.systems.forEach((system) => {
+    if (
+      system.energyAllocated + system.phaseEnergy <
+      system.template.energyNeeded
+    ) {
+      return false;
+    }
+  });
+  return true;
+}
 </script>
 
 <template>
@@ -41,5 +58,11 @@ const gameState = useGameStateStore();
         {{ system.template.energyNeeded }}
       </div>
     </div>
+  </div>
+  <div>
+    // TODO:
+    <button :disabled="!canContinue()" @click="battle.nextPhase">
+      Continue
+    </button>
   </div>
 </template>
