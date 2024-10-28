@@ -22,16 +22,16 @@ export const useBattleStore = defineStore("battle", () => {
   const phaseText = ref<string[]>([]);
   const choices = ref<BattleChoice[]>([]);
 
-  const getPhaseAttacker = computed(() => {
+  const phaseAttacker = computed<ShipInstance>(() => {
     if (phaseName.value in ["enemyTurn", "enemyResult"]) {
-      return enemy;
+      return enemy.value;
     } else return gameState.playerShip;
   });
 
-  const getPhaseDefender = computed(() => {
+  const phaseDefender = computed(() => {
     if (phaseName.value in ["enemyTurn", "enemyResult"]) {
       return gameState.playerShip;
-    } else return enemy;
+    } else return enemy.value;
   });
 
   function nextPhase(): void {
@@ -224,8 +224,8 @@ export const useBattleStore = defineStore("battle", () => {
     phaseName,
     phaseText,
     choices,
-    getPhaseAttacker,
-    getPhaseDefender,
+    phaseAttacker,
+    phaseDefender,
     startBattle,
     $reset,
   };

@@ -7,7 +7,7 @@ const router = useRouter();
 const gameState = useGameStateStore();
 
 function newSave(ship: string): void {
-  gameState.reset();
+  gameState.$reset();
   gameState.playerShip = buildShip(playerShipTemplates["scout1"]);
   gameState.sceneId = "intro";
 

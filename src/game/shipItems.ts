@@ -1,3 +1,4 @@
+import { useBattleStore } from "@/stores/battle";
 import { useGameStateStore } from "@/stores/gameState";
 
 export type ShipItem = {
@@ -11,10 +12,10 @@ export const shipItems: Record<string, ShipItem> = {
     name: "Hull Reinforcement",
     description: "Restores a small amount of hull integrity.",
     action: () => {
-      const gameState = useGameStateStore();
-      gameState.battle.phaseAttacker.hp = Math.min(
-        gameState.battle.phaseAttacker.hp + 3,
-        gameState.battle.phaseAttacker.template.maxHp
+      const battle = useBattleStore();
+      battle.phaseAttacker.hp = Math.min(
+        battle.phaseAttacker.hp + 3,
+        battle.phaseAttacker.template.maxHp
       );
     },
   },

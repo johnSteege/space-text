@@ -1,7 +1,7 @@
 import { useGameStateStore } from "@/stores/gameState";
-import { startBattle } from "./battle";
 import { useRouter } from "vue-router";
 import { enemyTemplates } from "./ships";
+import { useBattleStore } from "@/stores/battle";
 
 export type Choice = {
   text: string;
@@ -72,7 +72,7 @@ const scenes: Scene[] = [
       {
         text: "Start battle",
         action: () => {
-          startBattle(enemyTemplates.slug_1);
+          useBattleStore().startBattle(enemyTemplates.slug_1);
         },
         nextSceneId: "battle",
       },

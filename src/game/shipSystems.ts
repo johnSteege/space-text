@@ -45,18 +45,14 @@ export function fireWeapon(
 
   if (evadeRoll > hitChance) {
     // miss
-    gameState.battle.phaseText.push(
-      `${battle.getPhaseDefender().name} evaded the attack.`
-    );
+    battle.phaseText.push(`${battle.phaseDefender.name} evaded the attack.`);
     return;
   }
 
   const damage = randomIntLinear(minDamage, maxDamage);
 
-  battle.getPhaseDefender().hp -= damage;
-  gameState.battle.phaseText.push(
-    `${battle.getPhaseDefender().name} took ${damage} damage.`
-  );
+  battle.phaseDefender.hp -= damage;
+  battle.phaseText.push(`${battle.phaseDefender.name} took ${damage} damage.`);
 }
 
 // TODO replace these Records with something that provides completion and throws errors if a system is missing
