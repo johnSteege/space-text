@@ -60,7 +60,7 @@ function nextPhase(): void {
   } else if (gameState.battle.phase === "enemyTurn") {
     enemyResult();
   } else if (gameState.battle.phase === "enemyResult") {
-    playerTurn();
+    playerEnergy();
   } else {
     gameState.battle.phase = "battleSummary";
     gameState.battle.phaseText = ["ErRoR - Invalid battle phase"];

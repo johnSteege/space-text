@@ -19,6 +19,9 @@ function populateSystems(): void {
 onMounted(() => {
   populateSystems();
 });
+
+//TODO: move temp energy to systems
+
 </script>
 
 <template>
@@ -26,7 +29,7 @@ onMounted(() => {
   <div>
     <div
       v-for="se in systemEnergies"
-      style="border: 1px solid black; margin: 5px; padding: 5px;"
+      style="display:table; border: 1px solid black; margin: 5px; padding: 5px;"
     >
       <div>{{ se.system.template.name }}</div>
       <div>
