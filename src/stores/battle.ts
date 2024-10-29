@@ -8,11 +8,18 @@ import {
 } from "@/game/ships";
 import { useGameStateStore } from "./gameState";
 
-type BattleChoice = {
+type ChoiceSimple = {
+  text: string;
+  action: () => void;
+};
+
+type ChoiceAdvanced = {
   text: string;
   disabled?: boolean;
   action: () => void;
 };
+
+type BattleChoice = ChoiceSimple | ChoiceAdvanced;
 
 export const useBattleStore = defineStore("battle", () => {
   const gameState = useGameStateStore();

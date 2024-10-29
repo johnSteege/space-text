@@ -5,7 +5,7 @@ import SceneText from "@/components/SceneText.vue";
 import SceneChoices from "@/components/SceneChoices.vue";
 import { useGameStateStore } from "@/stores/gameState";
 import { getScene, type Scene, type Choice } from "@/game/scenes";
-import BattleDisplay from "@/components/BattleDisplay.vue";
+import BattleDisplay from "@/components/battle/BattleDisplay.vue";
 
 const gameState = useGameStateStore();
 const sceneData = computed<Scene>(() => getScene(gameState.sceneId));
