@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Component } from "vue";
 import { useGameStateStore } from "@/stores/gameState";
 import { useBattleStore } from "@/stores/battle";
+import Intro from "./Intro.vue";
 import PlayerEnergy from "./PlayerEnergy.vue";
 import PlayerSystems from "./PlayerSystems.vue";
 import PlayerResults from "./PlayerResults.vue";
@@ -8,6 +10,18 @@ import EnemyPhase from "./EnemyPhase.vue";
 import Summary from "./Summary.vue";
 
 const battle = useBattleStore();
+
+const phases = {
+  battleIntro: Intro,
+  playerEnergy: PlayerEnergy,
+  playerTurn: PlayerSystems,
+  playerResult: PlayerResults,
+  enemyTurn: EnemyPhase,
+  enemyResult: EnemyPhase,
+  battleSummary: Summary,
+} as {
+  [key: string]: Component;
+};
 </script>
 
 <template>
@@ -26,11 +40,13 @@ const battle = useBattleStore();
     </div>
   </div>
 
-  <PlayerEnergy v-if="battle.phaseName === 'playerEnergy'"> </PlayerEnergy>
+  <!-- <PlayerEnergy v-if="battle.phaseName === 'playerEnergy'"> </PlayerEnergy>
   <PlayerSystems v-if="battle.phaseName === 'playerTurn'"></PlayerSystems>
   <PlayerResults v-if="battle.phaseName === 'playerResult'"></PlayerResults>
   <EnemyPhase v-if="battle.phaseName === 'enemyTurn'"></EnemyPhase>
-  <Summary v-if="battle.phaseName === 'battleSummary'"></Summary>
+  <Summary v-if="battle.phaseName === 'battleSummary'"></Summary> -->
+
+  <component :is="phases[battle.phaseName]"></component>
 
   <div>
     <div v-for="choice in battle.choices">
