@@ -1,28 +1,70 @@
 <script setup lang="ts">
+import { computed, onMounted, ref, watch } from "vue";
 import { useBattleStore } from "@/stores/battle";
 import { useGameStateStore } from "@/stores/gameState";
+import BattleChoice from "./BattleChoice.vue";
+import BattlePhaseText from "./BattlePhaseText.vue";
 
 const gameState = useGameStateStore();
 const battle = useBattleStore();
 
-function canContinue(): boolean {
-  if (gameState.playerShip.unallocatedEnergy <= 0) {
-    return true;
-  }
+onMounted(() => {
+  initPhaseEnergy();
+});
+
+function initPhaseEnergy(): void {
+  gameState.playerShip.unallocatedEnergy = gameState.playerShip.energyPerTurn;
   gameState.playerShip.systems.forEach((system) => {
-    if (
-      system.energyAllocated + system.phaseEnergy <
-      system.template.energyNeeded
-    ) {
-      return false;
-    }
+    system.phaseEnergy = 0;
   });
-  return true;
 }
+
+function applyPhaseEnergy(): void {
+  gameState.playerShip.systems.forEach((system) => {
+    system.energyAllocated += system.phaseEnergy;
+    system.phaseEnergy = 0;
+  });
+
+  battle.nextPhase();
+}
+
+// const disableContinue = ref<boolean>(true);
+// watch(gameState.playerShip.unallocatedEnergy, () => {
+//   if (gameState.playerShip.unallocatedEnergy <= 0) {
+//     console.log("a");
+//     return false;
+//   }
+//   // Check if all systems are already full of energy
+//   gameState.playerShip.systems.forEach((system) => {
+//     if (
+//       system.energyAllocated + system.phaseEnergy <
+//       system.template.energyNeeded
+//     ) {
+//       console.log("b");
+//       return true;
+//     }
+//   });
+//   console.log("c");
+//   return false;
+
+// });
+
+const canAllocateEnergy = computed<boolean>(() => {
+  return (
+    gameState.playerShip.unallocatedEnergy > 0 &&
+    gameState.playerShip.systems.some(
+      (s) => s.energyAllocated + s.phaseEnergy < s.template.energyNeeded
+    )
+  );
+});
 </script>
 
 <template>
-  <div>Unallocated Energy: {{ gameState.playerShip.unallocatedEnergy }}</div>
+  <BattlePhaseText>Allocate Reactor Energy</BattlePhaseText>
+  <BattlePhaseText
+    >Unallocated Energy:
+    {{ gameState.playerShip.unallocatedEnergy }}</BattlePhaseText
+  >
   <div>
     <div
       v-for="system in gameState.playerShip.systems"
@@ -59,10 +101,12 @@ function canContinue(): boolean {
       </div>
     </div>
   </div>
-  <div>
-    // TODO:
+  <!-- <div>
     <button :disabled="!canContinue()" @click="battle.nextPhase">
       Continue
     </button>
-  </div>
+  </div> -->
+  <BattleChoice :disabled="canAllocateEnergy" @action.once="applyPhaseEnergy"
+    >Continue</BattleChoice
+  >
 </template>

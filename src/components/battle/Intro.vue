@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useBattleStore } from "@/stores/battle";
-import PhaseChoice from "./PhaseChoice.vue";
+import BattlePhaseText from "./BattlePhaseText.vue";
+import BattleChoice from "./BattleChoice.vue";
 
 const battle = useBattleStore();
 const enemyName = battle.enemy.template.templateName;
@@ -9,6 +10,6 @@ const enemyName = battle.enemy.template.templateName;
 <template>
   Intro
 
-  <PhaseText>{{ `A ${enemyName} has appeared!` }}</PhaseText>
-  <PhaseChoice text="Start Battle" @action.once="battle.nextPhase" />
+  <BattlePhaseText>{{ `A ${enemyName} has appeared!` }}</BattlePhaseText>
+  <BattleChoice @action.once="battle.nextPhase">Start Battle</BattleChoice>
 </template>

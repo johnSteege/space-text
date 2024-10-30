@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Component } from "vue";
-import { useGameStateStore } from "@/stores/gameState";
 import { useBattleStore } from "@/stores/battle";
 import Intro from "./Intro.vue";
 import PlayerEnergy from "./PlayerEnergy.vue";
@@ -34,11 +33,12 @@ const phases = {
   <div>
     {{ battle.phaseName }}
   </div>
+  <!-- 
   <div>
     <div v-for="text in battle.phaseText" style="margin-bottom: 10px">
       {{ text }}
     </div>
-  </div>
+  </div> -->
 
   <!-- <PlayerEnergy v-if="battle.phaseName === 'playerEnergy'"> </PlayerEnergy>
   <PlayerSystems v-if="battle.phaseName === 'playerTurn'"></PlayerSystems>
@@ -48,13 +48,13 @@ const phases = {
 
   <component :is="phases[battle.phaseName]"></component>
 
-  <div>
+  <!-- <div>
     <div v-for="choice in battle.choices">
       <button @click="choice.action">
         {{ choice.text }}
       </button>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
