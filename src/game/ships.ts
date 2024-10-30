@@ -37,7 +37,9 @@ export function buildShip(template: ShipTemplate): ShipInstance {
   };
 }
 
-export const playerShipTemplates: Record<string, ShipTemplate> = {
+type playerShipId = "scout1";
+
+export const playerShipTemplates = {
   scout1: {
     templateName: "Scout",
     maxHp: 15,
@@ -53,9 +55,13 @@ export const playerShipTemplates: Record<string, ShipTemplate> = {
     ],
     startingItems: [shipItems.potion, shipItems.torpedo],
   },
+} as {
+  [key in playerShipId]: ShipTemplate;
 };
 
-export const enemyTemplates: Record<string, ShipTemplate> = {
+type enemyShipId = "slug_1";
+
+export const enemyTemplates = {
   slug_1: {
     templateName: "Slug Cruiser",
     maxHp: 5,
@@ -71,6 +77,8 @@ export const enemyTemplates: Record<string, ShipTemplate> = {
     ],
     startingItems: [],
   },
+} as {
+  [key in enemyShipId]: ShipTemplate;
 };
 
 export const nullShip = buildShip({

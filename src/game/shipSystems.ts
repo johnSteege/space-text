@@ -55,8 +55,9 @@ export function fireWeapon(
   battle.battleText.push(`${battle.phaseDefender.name} took ${damage} damage.`);
 }
 
-// TODO replace these Records with something that provides completion and throws errors if a system is missing
-const weapons: Record<string, ShipSystemTemplate> = {
+type weaponId = "laser1" | "torpedo1";
+
+const weapons = {
   laser1: {
     name: "Laser",
     description: "Blocked by shields.",
@@ -75,9 +76,20 @@ const weapons: Record<string, ShipSystemTemplate> = {
       fireWeapon(0, 0, 3);
     },
   },
+} as {
+  [key in weaponId]: ShipSystemTemplate;
 };
 
-export const shipSystems: Record<string, ShipSystemTemplate> = {
+type systemId =
+  | weaponId
+  | "shields"
+  | "engines"
+  | "targeting"
+  | "power"
+  | "repair"
+  | "sensors";
+
+export const shipSystems = {
   ...weapons,
   shields: {
     name: "Shields",
@@ -131,4 +143,6 @@ export const shipSystems: Record<string, ShipSystemTemplate> = {
     energyNeeded: 8,
     action: () => {},
   },
+} as {
+  [key in systemId]: ShipSystemTemplate;
 };
