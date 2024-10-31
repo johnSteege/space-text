@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { useBattleStore } from "@/stores/battle";
+import BattlePhaseText from "./BattlePhaseText.vue";
 import Intro from "./Intro.vue";
 import PlayerEnergy from "./PlayerEnergy.vue";
 import PlayerSystems from "./PlayerSystems.vue";
@@ -33,6 +34,11 @@ const phases = {
   <div>
     {{ battle.phaseName }}
   </div>
+
+  <BattlePhaseText v-for="text in battle.battleText">{{
+    text
+  }}</BattlePhaseText>
+
   <!-- 
   <div>
     <div v-for="text in battle.phaseText" style="margin-bottom: 10px">

@@ -42,7 +42,7 @@ type playerShipId = "scout1" | "kestrel1";
 export const playerShipTemplates = {
   scout1: {
     templateName: "Scout",
-    maxHp: 15,
+    maxHp: 2,
     startingSystems: [
       { system: shipSystems.shields, level: 1 },
       { system: shipSystems.engines, level: 1 },

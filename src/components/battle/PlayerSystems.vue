@@ -8,6 +8,8 @@ import type { ShipSystemInstance } from "@/game/shipSystems";
 const gameState = useGameStateStore();
 const battle = useBattleStore();
 
+// TODO: allow weapons to target enemy systems
+
 function doSystemAction(system: ShipSystemInstance): void {
   system.energyAllocated = 0;
   system.template.action();
@@ -15,9 +17,6 @@ function doSystemAction(system: ShipSystemInstance): void {
 </script>
 
 <template>
-  <BattlePhaseText v-for="text in battle.battleText">{{
-    text
-  }}</BattlePhaseText>
 
   <BattlePhaseText>System Actions</BattlePhaseText>
 

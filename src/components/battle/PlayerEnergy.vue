@@ -29,27 +29,6 @@ function applyPhaseEnergy(): void {
   battle.nextPhase();
 }
 
-// const disableContinue = ref<boolean>(true);
-// watch(gameState.playerShip.unallocatedEnergy, () => {
-//   if (gameState.playerShip.unallocatedEnergy <= 0) {
-//     console.log("a");
-//     return false;
-//   }
-//   // Check if all systems are already full of energy
-//   gameState.playerShip.systems.forEach((system) => {
-//     if (
-//       system.energyAllocated + system.phaseEnergy <
-//       system.template.energyNeeded
-//     ) {
-//       console.log("b");
-//       return true;
-//     }
-//   });
-//   console.log("c");
-//   return false;
-
-// });
-
 const canAllocateEnergy = computed<boolean>(() => {
   return (
     gameState.playerShip.unallocatedEnergy > 0 &&
@@ -108,4 +87,5 @@ const canAllocateEnergy = computed<boolean>(() => {
   <BattleChoice :disabled="canAllocateEnergy" @action.once="applyPhaseEnergy"
     >Continue</BattleChoice
   >
+  <BattleChoice @action.once="applyPhaseEnergy">Skip</BattleChoice>
 </template>

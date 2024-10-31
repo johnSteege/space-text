@@ -1,7 +1,6 @@
 import { useGameStateStore } from "@/stores/gameState";
-import { useRouter } from "vue-router";
-import { enemyTemplates } from "./ships";
 import { useBattleStore } from "@/stores/battle";
+import { enemyTemplates } from "./ships";
 
 export type Choice = {
   text: string;
@@ -27,15 +26,7 @@ const scenes: Scene[] = [
     id: "gameOver",
     type: "gameOver",
     text: "Game Over",
-    choices: [
-      {
-        text: "Main Menu",
-        action: () => {
-          useRouter().push("/");
-        },
-        nextSceneId: "gameOver",
-      },
-    ],
+    choices: [], // StoryView needs to handle this.
   },
   {
     id: "battle",

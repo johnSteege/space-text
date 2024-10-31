@@ -21,15 +21,15 @@ export const useBattleStore = defineStore("battle", () => {
   const battleText = ref<string[]>([]);
 
   const phaseAttacker = computed<ShipInstance>(() => {
-    if (phaseName.value in ["enemyTurn", "enemyResult"]) {
-      return enemy.value;
-    } else return gameState.playerShip;
+    return ["enemyTurn", "enemyResult"].includes(phaseName.value)
+      ? enemy.value
+      : gameState.playerShip;
   });
 
-  const phaseDefender = computed(() => {
-    if (phaseName.value in ["enemyTurn", "enemyResult"]) {
-      return gameState.playerShip;
-    } else return enemy.value;
+  const phaseDefender = computed<ShipInstance>(() => {
+    return ["enemyTurn", "enemyResult"].includes(phaseName.value)
+      ? gameState.playerShip
+      : enemy.value;
   });
 
   const phaseOrder = {
