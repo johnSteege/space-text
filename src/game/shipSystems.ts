@@ -29,6 +29,12 @@ export function buildShipSystem(
   };
 }
 
+export function isAtMaxEnergy(system: ShipSystemInstance): boolean {
+  return (
+    system.energyAllocated + system.phaseEnergy >= system.template.energyNeeded
+  );
+}
+
 export function fireWeapon(
   accuracyModifier: number,
   minDamage: number,

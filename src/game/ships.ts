@@ -37,7 +37,7 @@ export function buildShip(template: ShipTemplate): ShipInstance {
   };
 }
 
-type playerShipId = "scout1";
+type playerShipId = "scout1" | "kestrel1";
 
 export const playerShipTemplates = {
   scout1: {

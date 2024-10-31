@@ -4,6 +4,7 @@ import { useBattleStore } from "@/stores/battle";
 import { useGameStateStore } from "@/stores/gameState";
 import BattleChoice from "./BattleChoice.vue";
 import BattlePhaseText from "./BattlePhaseText.vue";
+import { isAtMaxEnergy } from "@/game/shipSystems";
 
 const gameState = useGameStateStore();
 const battle = useBattleStore();
@@ -83,9 +84,7 @@ const canAllocateEnergy = computed<boolean>(() => {
         </button>
         <button
           :disabled="
-            gameState.playerShip.unallocatedEnergy <= 0 ||
-            system.energyAllocated + system.phaseEnergy >=
-              system.template.energyNeeded
+            gameState.playerShip.unallocatedEnergy <= 0 || isAtMaxEnergy(system)
           "
           @click="
             system.phaseEnergy += 1;
