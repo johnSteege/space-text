@@ -27,46 +27,57 @@ Array.prototype.randomElement = function () {
   return this[Math.floor(Math.random() * this.length)];
 };
 
-export class ConstrainedNumber {
-  private _value: number;
-  private readonly min: number;
-  private readonly max: number;
+//
+export type BoundedNumber = {
+  get(): number;
+  set(value: number): void;
+  add(amount: number): number;
+  isAtMin(): boolean;
+  isAtMax(): boolean;
+};
 
-  constructor(initialValue: number, min: number = 0, max: number) {
-    this._value = initialValue;
-    this.min = min;
-    this.max = max;
+export function createBoundedNumber(
+  initialValue: number,
+  min: number,
+  max: number
+): BoundedNumber {
+  let value: number = initialValue;
+
+  const set = (newValue: number) => {
+    value = constrain(newValue);
+  };
+
+  const get = () => value;
+
+  function constrain(v: number): number {
+    return Math.min(Math.max(v, min), max);
   }
 
-  private constrain(v: number): number {
-    return Math.min(Math.max(v, this.min), this.max);
+  function remainder(v: number): number {
+    return v - constrain(v);
   }
 
-  private remainder(v: number): number {
-    return v - this.constrain(v);
-  }
+  const add = (amount: number): number => {
+    const result = remainder(value + amount);
 
-  get value(): number {
-    return this._value;
-  }
+    value += amount;
 
-  set value(value: number) {
-    this._value = this.constrain(value);
-  }
+    return result;
+  };
 
-  add(amount: number): number {
-    const remainder = this.remainder(this._value + amount);
+  const isAtMin = (): boolean => {
+    return value <= min;
+  };
 
-    this.value = this._value + amount;
+  const isAtMax = (): boolean => {
+    return value >= max;
+  };
 
-    return remainder;
-  }
-
-  isAtMin(): boolean {
-    return this._value <= this.min;
-  }
-
-  isAtMax(): boolean {
-    return this._value >= this.max;
-  }
+  return {
+    get,
+    set,
+    add,
+    isAtMin,
+    isAtMax,
+  };
 }

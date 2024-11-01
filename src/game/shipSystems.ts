@@ -1,5 +1,9 @@
 import { useGameStateStore } from "@/stores/gameState";
-import { randomIntLinear } from "./util";
+import {
+  createBoundedNumber,
+  randomIntLinear,
+  type BoundedNumber,
+} from "./util";
 import { useBattleStore } from "@/stores/battle";
 
 export type ShipSystemTemplate = {
@@ -12,7 +16,7 @@ export type ShipSystemTemplate = {
 
 export type ShipSystemInstance = {
   template: ShipSystemTemplate;
-  hp: number;
+  hp: BoundedNumber;
   energyAllocated: number;
   phaseEnergy: number; // Temporary energy during the player energy phase
 };
@@ -23,7 +27,7 @@ export function buildShipSystem(
 ): ShipSystemInstance {
   return {
     template: template,
-    hp: level,
+    hp: createBoundedNumber(level, 0, level),
     energyAllocated: 0,
     phaseEnergy: 0,
   };
