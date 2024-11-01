@@ -5,6 +5,7 @@
  * @param min - inclusive minimum
  * @param max - inclusive maximum
  * @returns random integer
+ *
  */
 export function randomIntLinear(min: number, max: number): number {
   min = Math.ceil(min);
@@ -22,12 +23,16 @@ declare global {
  * Returns a random element from the array.
  *
  * @returns random element
+ *
  */
 Array.prototype.randomElement = function () {
   return this[Math.floor(Math.random() * this.length)];
 };
 
-//
+/**
+ * A number that is bounded by a minimum and maximum value.
+ *
+ */
 export type BoundedNumber = {
   get(): number;
   set(value: number): void;
@@ -38,6 +43,15 @@ export type BoundedNumber = {
   isAtMax(): boolean;
 };
 
+/**
+ * Creates a new bounded number.
+ *
+ * @param initialValue The initial value
+ * @param minimum The minimum value
+ * @param maximum The maximum value
+ * @returns The new bounded number
+ *
+ */
 export function createBoundedNumber(
   initialValue: number,
   minimum: number = 0,
@@ -67,6 +81,12 @@ export function createBoundedNumber(
     return v - constrain(v);
   }
 
+  /**
+   * Add the amount to the current value.
+   *
+   * @param amount The amount to add
+   * @returns The remainder after adding the amount
+   */
   const add = (amount: number): number => {
     const result = remainder(value + amount);
 
