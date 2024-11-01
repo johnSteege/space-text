@@ -27,11 +27,46 @@ Array.prototype.randomElement = function () {
   return this[Math.floor(Math.random() * this.length)];
 };
 
-// export function test(): void {
-//   let results = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-//   for (let i = 0; i < 1000; i++) {
-//     results[randomIntLinear(1, 2)] += 1;
-//   }
+export class ConstrainedNumber {
+  private _value: number;
+  private readonly min: number;
+  private readonly max: number;
 
-//   console.log(results);
-// }
+  constructor(initialValue: number, min: number = 0, max: number) {
+    this._value = initialValue;
+    this.min = min;
+    this.max = max;
+  }
+
+  private constrain(v: number): number {
+    return Math.min(Math.max(v, this.min), this.max);
+  }
+
+  private remainder(v: number): number {
+    return v - this.constrain(v);
+  }
+
+  get value(): number {
+    return this._value;
+  }
+
+  set value(value: number) {
+    this._value = this.constrain(value);
+  }
+
+  add(amount: number): number {
+    const remainder = this.remainder(this._value + amount);
+
+    this.value = this._value + amount;
+
+    return remainder;
+  }
+
+  isAtMin(): boolean {
+    return this._value <= this.min;
+  }
+
+  isAtMax(): boolean {
+    return this._value >= this.max;
+  }
+}

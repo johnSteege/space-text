@@ -14,7 +14,7 @@ export type ShipSystemInstance = {
   template: ShipSystemTemplate;
   hp: number;
   energyAllocated: number;
-  phaseEnergy: number; // Temporary energy during the phase before being applied
+  phaseEnergy: number; // Temporary energy during the player energy phase
 };
 
 export function buildShipSystem(
@@ -66,7 +66,7 @@ type weaponId = "laser1" | "torpedo1";
 const weapons = {
   laser1: {
     name: "Laser",
-    description: "Blocked by shields.",
+    description: "Quick and accurate light weapon.",
     isWeapon: true,
     energyNeeded: 2,
     action: () => {
@@ -75,7 +75,7 @@ const weapons = {
   },
   torpedo1: {
     name: "Torpedo",
-    description: "Ignores shields.",
+    description: "Powerful but less accurate.",
     isWeapon: true,
     energyNeeded: 3,
     action: () => {
