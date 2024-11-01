@@ -5,6 +5,7 @@ import {
   type ShipSystemInstance,
   type ShipSystemTemplate,
 } from "./shipSystems";
+import { createBoundedNumber, type BoundedNumber } from "./util";
 
 export type ShipTemplate = {
   templateName: string;
@@ -16,7 +17,7 @@ export type ShipTemplate = {
 export type ShipInstance = {
   template: ShipTemplate;
   name: string;
-  hp: number;
+  hp: BoundedNumber;
   energyPerTurn: number;
   unallocatedEnergy: number;
   systems: ShipSystemInstance[];
@@ -27,7 +28,7 @@ export function buildShip(template: ShipTemplate): ShipInstance {
   return {
     template,
     name: template.templateName,
-    hp: template.maxHp,
+    hp: createBoundedNumber(template.maxHp),
     energyPerTurn: 5,
     unallocatedEnergy: 0,
     systems: template.startingSystems.map((system) =>

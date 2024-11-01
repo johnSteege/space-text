@@ -31,6 +31,8 @@ Array.prototype.randomElement = function () {
 export type BoundedNumber = {
   get(): number;
   set(value: number): void;
+  min(): number;
+  max(): number;
   add(amount: number): number;
   isAtMin(): boolean;
   isAtMax(): boolean;
@@ -38,19 +40,27 @@ export type BoundedNumber = {
 
 export function createBoundedNumber(
   initialValue: number,
-  min: number,
-  max: number
+  minimum: number = 0,
+  maximum: number = initialValue
 ): BoundedNumber {
   let value: number = initialValue;
+
+  const get = () => value;
 
   const set = (newValue: number) => {
     value = constrain(newValue);
   };
 
-  const get = () => value;
+  const min = (): number => {
+    return minimum;
+  };
+
+  const max = (): number => {
+    return maximum;
+  };
 
   function constrain(v: number): number {
-    return Math.min(Math.max(v, min), max);
+    return Math.min(Math.max(v, minimum), maximum);
   }
 
   function remainder(v: number): number {
@@ -66,16 +76,18 @@ export function createBoundedNumber(
   };
 
   const isAtMin = (): boolean => {
-    return value <= min;
+    return value <= minimum;
   };
 
   const isAtMax = (): boolean => {
-    return value >= max;
+    return value >= maximum;
   };
 
   return {
     get,
     set,
+    min,
+    max,
     add,
     isAtMin,
     isAtMax,

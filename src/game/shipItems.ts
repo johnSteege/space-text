@@ -13,10 +13,7 @@ export const shipItems: Record<string, ShipItem> = {
     description: "Restores a small amount of hull integrity.",
     action: () => {
       const battle = useBattleStore();
-      battle.phaseAttacker.hp = Math.min(
-        battle.phaseAttacker.hp + 3,
-        battle.phaseAttacker.template.maxHp
-      );
+      battle.phaseAttacker.hp.add(3);
     },
   },
   torpedo: {

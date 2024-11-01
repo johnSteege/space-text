@@ -73,13 +73,13 @@ export const useBattleStore = defineStore("battle", () => {
   }
 
   function checkIsBattleOver(): boolean {
-    if (gameState.playerShip.hp <= 0) {
+    if (gameState.playerShip.hp.isAtMin()) {
       phaseName.value = "battleSummary";
 
       return true;
     }
 
-    if (enemy.value.hp <= 0) {
+    if (enemy.value.hp.isAtMin()) {
       phaseName.value = "battleSummary";
 
       return true;

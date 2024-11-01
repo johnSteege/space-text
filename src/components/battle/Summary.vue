@@ -12,10 +12,10 @@ const summaryText = ref<string>("");
 const nextSceneId = ref<string>("");
 
 onMounted(() => {
-  if (gameState.playerShip.hp <= 0) {
+  if (gameState.playerShip.hp.isAtMin()) {
     summaryText.value = "You have been defeated!";
     nextSceneId.value = "gameOver";
-  } else if (battle.enemy.hp <= 0) {
+  } else if (battle.enemy.hp.isAtMin()) {
     summaryText.value = `The ${battle.enemy.template.templateName} has been defeated!`;
     nextSceneId.value = "dialogue1";
   } else {

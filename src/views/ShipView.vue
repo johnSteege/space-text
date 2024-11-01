@@ -8,7 +8,7 @@ const gameState = useGameStateStore();
   <div>
     <span class="resource">
       {{
-        `Health: ${gameState.playerShip.hp}/${gameState.playerShip.template.maxHp}`
+        `Health: ${gameState.playerShip.hp.get()}/${gameState.playerShip.hp.max()}`
       }}</span
     >
     <span class="resource">Money: {{ gameState.playerMoney }}</span>

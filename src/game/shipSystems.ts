@@ -27,7 +27,7 @@ export function buildShipSystem(
 ): ShipSystemInstance {
   return {
     template: template,
-    hp: createBoundedNumber(level, 0, level),
+    hp: createBoundedNumber(level),
     energyAllocated: 0,
     phaseEnergy: 0,
   };
@@ -61,7 +61,7 @@ export function fireWeapon(
 
   const damage = randomIntLinear(minDamage, maxDamage);
 
-  battle.phaseDefender.hp -= damage;
+  battle.phaseDefender.hp.add(damage);
   battle.battleText.push(`${battle.phaseDefender.name} took ${damage} damage.`);
 }
 
