@@ -4,7 +4,6 @@ import { useBattleStore } from "@/stores/battle";
 import { useGameStateStore } from "@/stores/gameState";
 import BattleChoice from "./BattleChoice.vue";
 import BattlePhaseText from "./BattlePhaseText.vue";
-import { isAtMaxEnergy } from "@/game/shipSystems";
 
 const gameState = useGameStateStore();
 const battle = useBattleStore();
@@ -16,14 +15,13 @@ onMounted(() => {
 function initPhaseEnergy(): void {
   gameState.playerShip.unallocatedEnergy = gameState.playerShip.energyPerTurn;
   gameState.playerShip.systems.forEach((system) => {
-    system.phaseEnergy = 0;
+    system.energy.resetTemp();
   });
 }
 
 function applyPhaseEnergy(): void {
   gameState.playerShip.systems.forEach((system) => {
-    system.energyAllocated += system.phaseEnergy;
-    system.phaseEnergy = 0;
+    system.energy.fillTemp();
   });
 
   battle.nextPhase();
@@ -32,9 +30,7 @@ function applyPhaseEnergy(): void {
 const canAllocateEnergy = computed<boolean>(() => {
   return (
     gameState.playerShip.unallocatedEnergy > 0 &&
-    gameState.playerShip.systems.some(
-      (s) => s.energyAllocated + s.phaseEnergy < s.template.energyNeeded
-    )
+    gameState.playerShip.systems.some((s) => s.energy.getEmpty() > 0)
   );
 });
 </script>
@@ -50,12 +46,12 @@ const canAllocateEnergy = computed<boolean>(() => {
       v-for="system in gameState.playerShip.systems"
       style="display: table; border: 1px solid black; margin: 5px; padding: 5px"
     >
-      <div>{{ system.template.name }}</div>
+      <div>{{ system.name }}</div>
       <div>
         <button
-          :disabled="system.phaseEnergy <= 0"
+          :disabled="system.energy.getTemp() <= 0"
           @click="
-            system.phaseEnergy -= 1;
+            system.energy.addTemp(-1);
             gameState.playerShip.unallocatedEnergy += 1;
           "
         >
@@ -63,19 +59,18 @@ const canAllocateEnergy = computed<boolean>(() => {
         </button>
         <button
           :disabled="
-            gameState.playerShip.unallocatedEnergy <= 0 || isAtMaxEnergy(system)
+            gameState.playerShip.unallocatedEnergy <= 0 ||
+            system.energy.isFull()
           "
           @click="
-            system.phaseEnergy += 1;
+            system.energy.addTemp(1);
             gameState.playerShip.unallocatedEnergy -= 1;
           "
         >
           +
         </button>
-        {{ system.energyAllocated + system.phaseEnergy }} ({{
-          system.phaseEnergy
-        }}) /
-        {{ system.template.energyNeeded }}
+        {{ system.energy.getTotal() }} ({{ system.energy.getTemp() }}) /
+        {{ system.energy.getMax() }}
       </div>
     </div>
   </div>

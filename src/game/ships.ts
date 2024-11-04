@@ -1,16 +1,16 @@
 import { type ShipItem, shipItems } from "./shipItems";
 import {
-  buildShipSystem,
-  shipSystems,
-  type ShipSystemInstance,
-  type ShipSystemTemplate,
+  defineShipSystem,
+  type ShipSystem,
+  type ShipSystemId,
 } from "./shipSystems";
-import { createBoundedNumber, type BoundedNumber } from "./util";
+import { defineBoundedNumber, type BoundedNumber } from "./util";
 
+// TODO: replace templates with id, type, define
 export type ShipTemplate = {
   templateName: string;
   maxHp: number;
-  startingSystems: { system: ShipSystemTemplate; level: number }[];
+  startingSystems: { system: ShipSystemId; level: number }[];
   startingItems: ShipItem[]; // TODO: add amounts
 };
 
@@ -20,7 +20,7 @@ export type ShipInstance = {
   hp: BoundedNumber;
   energyPerTurn: number;
   unallocatedEnergy: number;
-  systems: ShipSystemInstance[];
+  systems: ShipSystem[];
   items: ShipItem[];
 };
 
@@ -28,11 +28,11 @@ export function buildShip(template: ShipTemplate): ShipInstance {
   return {
     template,
     name: template.templateName,
-    hp: createBoundedNumber(template.maxHp),
+    hp: defineBoundedNumber(template.maxHp),
     energyPerTurn: 5,
     unallocatedEnergy: 0,
     systems: template.startingSystems.map((system) =>
-      buildShipSystem(system.system, system.level)
+      defineShipSystem(system.system, system.level)
     ),
     items: template.startingItems,
   };
@@ -45,14 +45,14 @@ export const playerShipTemplates = {
     templateName: "Scout",
     maxHp: 2,
     startingSystems: [
-      { system: shipSystems.shields, level: 1 },
-      { system: shipSystems.engines, level: 1 },
-      { system: shipSystems.targeting, level: 1 },
-      { system: shipSystems.power, level: 1 },
-      { system: shipSystems.repair, level: 1 },
-      { system: shipSystems.sensors, level: 1 },
-      { system: shipSystems.laser1, level: 1 },
-      { system: shipSystems.torpedo1, level: 1 },
+      { system: "shields", level: 1 },
+      { system: "engines", level: 1 },
+      { system: "targeting", level: 1 },
+      { system: "power", level: 1 },
+      { system: "repair", level: 1 },
+      { system: "sensors", level: 1 },
+      { system: "laser1", level: 1 },
+      { system: "torpedo1", level: 1 },
     ],
     startingItems: [shipItems.potion, shipItems.torpedo],
   },
@@ -67,14 +67,14 @@ export const enemyTemplates = {
     templateName: "Slug Cruiser",
     maxHp: 5,
     startingSystems: [
-      { system: shipSystems.shields, level: 1 },
-      { system: shipSystems.engines, level: 1 },
-      { system: shipSystems.targeting, level: 1 },
-      { system: shipSystems.power, level: 1 },
-      { system: shipSystems.repair, level: 1 },
-      { system: shipSystems.sensors, level: 1 },
-      { system: shipSystems.laser1, level: 1 },
-      { system: shipSystems.torpedo1, level: 1 },
+      { system: "shields", level: 1 },
+      { system: "engines", level: 1 },
+      { system: "targeting", level: 1 },
+      { system: "power", level: 1 },
+      { system: "repair", level: 1 },
+      { system: "sensors", level: 1 },
+      { system: "laser1", level: 1 },
+      { system: "torpedo1", level: 1 },
     ],
     startingItems: [],
   },

@@ -7,11 +7,7 @@ import {
   type ShipTemplate,
 } from "@/game/ships";
 import { useGameStateStore } from "./gameState";
-import {
-  fireWeapon,
-  isAtMaxEnergy,
-  type ShipSystemInstance,
-} from "@/game/shipSystems";
+import type { ShipSystem } from "@/game/shipSystems";
 
 export const useBattleStore = defineStore("battle", () => {
   const gameState = useGameStateStore();
@@ -49,10 +45,10 @@ export const useBattleStore = defineStore("battle", () => {
 
     // Set energy allocated of every system in both ships to 0.
     gameState.playerShip.systems.forEach((system) => {
-      system.energyAllocated = 0;
+      system.energy.resetTotal();
     });
     enemy.value.systems.forEach((system) => {
-      system.energyAllocated = 0;
+      system.energy.resetTotal();
     });
 
     gameState.isBattle = true;
@@ -95,26 +91,25 @@ export const useBattleStore = defineStore("battle", () => {
     );
 
     enemy.value.unallocatedEnergy = enemy.value.energyPerTurn;
-    const weapons: ShipSystemInstance[] = enemy.value.systems.filter(
-      (s) => s.template.isWeapon
-    );
+    const weapons: ShipSystem[] = enemy.value.systems.filter((s) => s.isWeapon);
 
     while (enemy.value.unallocatedEnergy > 0) {
       let system = weapons.randomElement();
-      if (isAtMaxEnergy(system)) {
+      if (system.energy.isFull()) {
         system = enemy.value.systems
-          .filter((s) => s.energyAllocated < s.template.energyNeeded)
+          .filter((s) => !s.energy.isFull())
           .randomElement();
       }
-      system.energyAllocated += 1;
+      system.energy.addTemp(1);
+      system.energy.fillTemp();
       enemy.value.unallocatedEnergy -= 1;
     }
 
     // Attack
     enemy.value.systems.forEach((system) => {
-      if (isAtMaxEnergy(system)) {
-        system.template.action();
-        system.energyAllocated = 0;
+      if (system.energy.isFull()) {
+        system.action();
+        system.energy.resetTotal();
       }
     });
   }

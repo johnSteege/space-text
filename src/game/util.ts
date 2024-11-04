@@ -52,7 +52,7 @@ export type BoundedNumber = {
  * @returns The new bounded number
  *
  */
-export function createBoundedNumber(
+export function defineBoundedNumber(
   initialValue: number,
   minimum: number = 0,
   maximum: number = initialValue
