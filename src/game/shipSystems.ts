@@ -33,7 +33,7 @@ import {
 //   };
 // }
 
-export type SystemEnergy = {
+export type ShipSystemEnergy = {
   getFilled(): number;
   getTemp(): number;
   getTotal(): number; // filled + temp
@@ -46,7 +46,7 @@ export type SystemEnergy = {
   fillTemp(): void; // temp -> filled
 };
 
-export function defineSystemEnergy(maxEnergy: number): SystemEnergy {
+export function defineShipSystemEnergy(maxEnergy: number): ShipSystemEnergy {
   let _filled: number = 0;
   let _temp: number = 0;
   let _max: number = maxEnergy;
@@ -138,7 +138,7 @@ export type ShipSystem = {
   isWeapon: boolean;
   action: () => void;
   hp: BoundedNumber;
-  energy: SystemEnergy;
+  energy: ShipSystemEnergy;
 };
 
 export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
@@ -148,7 +148,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
     isWeapon: false,
     action: () => {},
     hp: defineBoundedNumber(level),
-    energy: defineSystemEnergy(9),
+    energy: defineShipSystemEnergy(9),
   };
 
   switch (id) {
@@ -161,7 +161,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           fireWeapon(1, 1, 1);
         },
-        energy: defineSystemEnergy(2),
+        energy: defineShipSystemEnergy(2),
       };
       break;
     case "torpedo1":
@@ -173,7 +173,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           fireWeapon(0, 0, 3);
         },
-        energy: defineSystemEnergy(3),
+        energy: defineShipSystemEnergy(3),
       };
       break;
     case "shields":
@@ -185,7 +185,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           // Increase shield level
         },
-        energy: defineSystemEnergy(4),
+        energy: defineShipSystemEnergy(4),
       };
       break;
     case "engines":
@@ -195,7 +195,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Increases the chance to dodge attacks.",
         isWeapon: false,
         action: () => {},
-        energy: defineSystemEnergy(3),
+        energy: defineShipSystemEnergy(3),
       };
       break;
     case "targeting":
@@ -205,7 +205,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Improves weapon accuracy.",
         isWeapon: false,
         action: () => {},
-        energy: defineSystemEnergy(2),
+        energy: defineShipSystemEnergy(2),
       };
       break;
     case "power":
@@ -215,7 +215,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Charges the reactor and provides extra power next turn.",
         isWeapon: false,
         action: () => {},
-        energy: defineSystemEnergy(5),
+        energy: defineShipSystemEnergy(5),
       };
       break;
     case "repair":
@@ -226,7 +226,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
           "Repairs ship systems during battle, but cannot repair damage to the hull.",
         isWeapon: false,
         action: () => {},
-        energy: defineSystemEnergy(2),
+        energy: defineShipSystemEnergy(2),
       };
       break;
     case "sensors":
@@ -236,7 +236,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Gathers information about enemy ships.",
         isWeapon: false,
         action: () => {},
-        energy: defineSystemEnergy(3),
+        energy: defineShipSystemEnergy(3),
       };
       break;
     case "cloaking":
@@ -246,7 +246,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Grants 100% dodge for one turn.",
         isWeapon: false,
         action: () => {},
-        energy: defineSystemEnergy(8),
+        energy: defineShipSystemEnergy(8),
       };
       break;
   }
