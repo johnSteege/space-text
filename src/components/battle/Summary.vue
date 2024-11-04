@@ -16,7 +16,7 @@ onMounted(() => {
     summaryText.value = "You have been defeated!";
     nextSceneId.value = "gameOver";
   } else if (battle.enemy.hp.isAtMin()) {
-    summaryText.value = `The ${battle.enemy.template.templateName} has been defeated!`;
+    summaryText.value = `The ${battle.enemy.name} has been defeated!`;
     nextSceneId.value = "dialogue1";
   } else {
     // ERROR

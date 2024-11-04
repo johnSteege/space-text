@@ -2,7 +2,7 @@ import { useGameStateStore } from "@/stores/gameState";
 import { useBattleStore } from "@/stores/battle";
 import {
   type BoundedNumber,
-  defineBoundedNumber,
+  buildBoundedNumber,
   randomIntLinear,
 } from "./util";
 
@@ -19,7 +19,7 @@ export type ShipSystemEnergy = {
   fillTemp(): void; // temp -> filled
 };
 
-export function defineShipSystemEnergy(maxEnergy: number): ShipSystemEnergy {
+export function makeShipSystemEnergy(maxEnergy: number): ShipSystemEnergy {
   let _filled: number = 0;
   let _temp: number = 0;
   let _max: number = maxEnergy;
@@ -108,14 +108,14 @@ export type ShipSystem = {
   energy: ShipSystemEnergy;
 };
 
-export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
+export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
   let system: ShipSystem = {
     name: "NULL_SYSTEM",
     description: "NULL_SYSTEM",
     isWeapon: false,
     action: () => {},
-    hp: defineBoundedNumber(level),
-    energy: defineShipSystemEnergy(9),
+    hp: buildBoundedNumber(level),
+    energy: makeShipSystemEnergy(9),
   };
 
   switch (id) {
@@ -128,7 +128,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           fireWeapon(1, 1, 1);
         },
-        energy: defineShipSystemEnergy(2),
+        energy: makeShipSystemEnergy(2),
       };
       break;
     case "torpedo1":
@@ -140,7 +140,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           fireWeapon(0, 0, 3);
         },
-        energy: defineShipSystemEnergy(3),
+        energy: makeShipSystemEnergy(3),
       };
       break;
     case "shields":
@@ -152,7 +152,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           // Increase shield level
         },
-        energy: defineShipSystemEnergy(4),
+        energy: makeShipSystemEnergy(4),
       };
       break;
     case "engines":
@@ -162,7 +162,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Increases the chance to dodge attacks.",
         isWeapon: false,
         action: () => {},
-        energy: defineShipSystemEnergy(3),
+        energy: makeShipSystemEnergy(3),
       };
       break;
     case "targeting":
@@ -172,7 +172,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Improves weapon accuracy.",
         isWeapon: false,
         action: () => {},
-        energy: defineShipSystemEnergy(2),
+        energy: makeShipSystemEnergy(2),
       };
       break;
     case "power":
@@ -182,7 +182,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Charges the reactor and provides extra power next turn.",
         isWeapon: false,
         action: () => {},
-        energy: defineShipSystemEnergy(5),
+        energy: makeShipSystemEnergy(5),
       };
       break;
     case "repair":
@@ -193,7 +193,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
           "Repairs ship systems during battle, but cannot repair damage to the hull.",
         isWeapon: false,
         action: () => {},
-        energy: defineShipSystemEnergy(2),
+        energy: makeShipSystemEnergy(2),
       };
       break;
     case "sensors":
@@ -203,7 +203,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Gathers information about enemy ships.",
         isWeapon: false,
         action: () => {},
-        energy: defineShipSystemEnergy(3),
+        energy: makeShipSystemEnergy(3),
       };
       break;
     case "cloaking":
@@ -213,7 +213,7 @@ export function defineShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Grants 100% dodge for one turn.",
         isWeapon: false,
         action: () => {},
-        energy: defineShipSystemEnergy(8),
+        energy: makeShipSystemEnergy(8),
       };
       break;
   }

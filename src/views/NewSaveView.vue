@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useGameStateStore } from "@/stores/gameState";
-import { buildShip, playerShipTemplates } from "@/game/ships";
+import { makeShip, type ShipID } from "@/game/ships";
 
 const router = useRouter();
 const gameState = useGameStateStore();
 
-function newSave(ship: string): void {
+function newSave(shipId: ShipID): void {
   gameState.$reset();
-  gameState.playerShip = buildShip(playerShipTemplates["scout1"]);
+  gameState.playerShip = makeShip(shipId);
   gameState.sceneId = "intro";
 
   router.push("/game/story");
@@ -21,8 +21,8 @@ function newSave(ship: string): void {
   <h1>New Game</h1>
   <h2>Choose Ship</h2>
 
-  <button @click="newSave('scout')">Scout</button>
-  <button @click="newSave('kestrel')">Kestrel</button>
+  <button @click="newSave('scout1')">Scout</button>
+  <button @click="newSave('kestrel1')">Kestrel</button>
 </template>
 
 <style scoped>

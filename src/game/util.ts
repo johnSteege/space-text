@@ -36,6 +36,8 @@ Array.prototype.randomElement = function () {
 export type BoundedNumber = {
   get(): number;
   set(value: number): void;
+  setToMin(): void;
+  setToMax(): void;
   min(): number;
   max(): number;
   add(amount: number): number;
@@ -52,17 +54,25 @@ export type BoundedNumber = {
  * @returns The new bounded number
  *
  */
-export function defineBoundedNumber(
+export function buildBoundedNumber(
   initialValue: number,
   minimum: number = 0,
   maximum: number = initialValue
 ): BoundedNumber {
-  let value: number = initialValue;
+  let _value: number = initialValue;
 
-  const get = () => value;
+  const get = () => _value;
 
   const set = (newValue: number) => {
-    value = constrain(newValue);
+    _value = constrain(newValue);
+  };
+
+  const setToMin = () => {
+    _value = minimum;
+  };
+
+  const setToMax = () => {
+    _value = maximum;
   };
 
   const min = (): number => {
@@ -88,24 +98,26 @@ export function defineBoundedNumber(
    * @returns The remainder after adding the amount
    */
   const add = (amount: number): number => {
-    const result = remainder(value + amount);
+    const result = remainder(_value + amount);
 
-    value += amount;
+    _value += amount;
 
     return result;
   };
 
   const isAtMin = (): boolean => {
-    return value <= minimum;
+    return _value <= minimum;
   };
 
   const isAtMax = (): boolean => {
-    return value >= maximum;
+    return _value >= maximum;
   };
 
   return {
     get,
     set,
+    setToMin,
+    setToMax,
     min,
     max,
     add,

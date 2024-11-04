@@ -13,7 +13,7 @@ onMounted(() => {
 });
 
 function initPhaseEnergy(): void {
-  gameState.playerShip.unallocatedEnergy = gameState.playerShip.energyPerTurn;
+  gameState.playerShip.turnEnergy.setToMax();
   gameState.playerShip.systems.forEach((system) => {
     system.energy.resetTemp();
   });
@@ -29,7 +29,7 @@ function applyPhaseEnergy(): void {
 
 const canAllocateEnergy = computed<boolean>(() => {
   return (
-    gameState.playerShip.unallocatedEnergy > 0 &&
+    gameState.playerShip.turnEnergy.get() > 0 &&
     gameState.playerShip.systems.some((s) => s.energy.getEmpty() > 0)
   );
 });
@@ -39,7 +39,7 @@ const canAllocateEnergy = computed<boolean>(() => {
   <BattlePhaseText>Allocate Reactor Energy</BattlePhaseText>
   <BattlePhaseText
     >Unallocated Energy:
-    {{ gameState.playerShip.unallocatedEnergy }}</BattlePhaseText
+    {{ gameState.playerShip.turnEnergy.get() }}</BattlePhaseText
   >
   <div>
     <div
@@ -52,19 +52,18 @@ const canAllocateEnergy = computed<boolean>(() => {
           :disabled="system.energy.getTemp() <= 0"
           @click="
             system.energy.addTemp(-1);
-            gameState.playerShip.unallocatedEnergy += 1;
+            gameState.playerShip.turnEnergy.add(1);
           "
         >
           -
         </button>
         <button
           :disabled="
-            gameState.playerShip.unallocatedEnergy <= 0 ||
-            system.energy.isFull()
+            gameState.playerShip.turnEnergy.get() <= 0 || system.energy.isFull()
           "
           @click="
             system.energy.addTemp(1);
-            gameState.playerShip.unallocatedEnergy -= 1;
+            gameState.playerShip.turnEnergy.add(-1);
           "
         >
           +

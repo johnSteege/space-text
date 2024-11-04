@@ -9,7 +9,7 @@ const gameState = useGameStateStore();
     <span class="resource"
       >Hull:
       {{
-        `${gameState.playerShip.hp}/${gameState.playerShip.template.maxHp}`
+        `${gameState.playerShip.hp.get()}/${gameState.playerShip.hp.max()}`
       }}</span
     >
     <span class="resource">Money: {{ gameState.playerMoney }}</span>

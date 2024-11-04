@@ -26,7 +26,7 @@ const phases = {
 
 <template>
   <div style="margin-top: 10px">
-    <div>{{ battle.enemy.template.templateName }}</div>
+    <div>{{ battle.enemy.name }}</div>
     <span class="resource"
       >Hull: {{ `${battle.enemy.hp.get()}/${battle.enemy.hp.max()}` }}</span
     >

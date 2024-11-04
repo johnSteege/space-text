@@ -4,7 +4,7 @@ import BattlePhaseText from "./BattlePhaseText.vue";
 import BattleChoice from "./BattleChoice.vue";
 
 const battle = useBattleStore();
-const enemyName = battle.enemy.template.templateName;
+const enemyName = battle.enemy.name;
 </script>
 
 <template>
