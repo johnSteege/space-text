@@ -20,45 +20,51 @@ export type ShipSystemEnergy = {
 };
 
 export function makeShipSystemEnergy(maxEnergy: number): ShipSystemEnergy {
-  let _filled: number = 0;
-  let _temp: number = 0;
-  let _max: number = maxEnergy;
-
-  const getFilled = () => _filled;
-  const getTemp = () => _temp;
-  const getMax = () => _max;
-  const getTotal = () => getFilled() + getTemp();
-  const getEmpty = () => getMax() - getTotal();
-  const isFull = () => {
-    return getEmpty() <= 0;
-  };
-  const resetTemp = () => {
-    _temp = 0;
-  };
-  const resetTotal = () => {
-    _filled = 0;
-    _temp = 0;
-  };
-  const addTemp = (toAdd: number) => {
-    _temp = Math.min(_temp + toAdd, getMax());
-  };
-  const fillTemp = () => {
-    _filled += _temp;
-    _temp = 0;
+  type hidden = {
+    _filled: number;
+    _temp: number;
+    _max: number;
   };
 
-  return {
-    getFilled,
-    getTemp,
-    getTotal,
-    getMax,
-    getEmpty,
-    isFull,
-    resetTemp,
-    resetTotal,
-    addTemp,
-    fillTemp,
+  const result: ShipSystemEnergy & hidden = {
+    _filled: 0,
+    _temp: 0,
+    _max: maxEnergy,
+    getFilled: function (): number {
+      return this._filled;
+    },
+    getTemp: function (): number {
+      return this._temp;
+    },
+    getTotal: function (): number {
+      return this._filled + this._temp;
+    },
+    getMax: function (): number {
+      return this._max;
+    },
+    getEmpty: function (): number {
+      return this._max - this.getTotal();
+    },
+    isFull: function (): boolean {
+      return this.getEmpty() <= 0;
+    },
+    resetTemp: function (): void {
+      this._temp = 0;
+    },
+    resetTotal: function (): void {
+      this._filled = 0;
+      this._temp = 0;
+    },
+    addTemp: function (toAdd: number): void {
+      this._temp = Math.min(this._temp + toAdd, this._max);
+    },
+    fillTemp: function (): void {
+      this._filled += this._temp;
+      this._temp = 0;
+    },
   };
+
+  return result;
 }
 
 export function fireWeapon(

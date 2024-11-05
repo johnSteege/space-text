@@ -33,7 +33,8 @@ Array.prototype.randomElement = function <T>(): T {
  * A number that is bounded by a minimum and maximum value.
  *
  */
-export interface BoundedNumber {
+export type BoundedNumber = {
+  // Value, min, and max are defined in the builder function so they can be psuedo-private.
   get(): number;
   set(value: number): void;
   setToMin(): void;
