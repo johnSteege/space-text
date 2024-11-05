@@ -4,6 +4,7 @@ import { useBattleStore } from "@/stores/battle";
 import { useGameStateStore } from "@/stores/gameState";
 import BattleChoice from "./BattleChoice.vue";
 import BattlePhaseText from "./BattlePhaseText.vue";
+import type { ShipSystem } from "@/game/shipSystems";
 
 const gameState = useGameStateStore();
 const battle = useBattleStore();
@@ -33,6 +34,12 @@ const canAllocateEnergy = computed<boolean>(() => {
     gameState.playerShip.systems.some((s) => s.energy.getEmpty() > 0)
   );
 });
+
+function addTempEnergy(system: ShipSystem, amount: number): void {
+  console.log(system.name);
+  system.energy.addTemp(amount);
+  gameState.playerShip.turnEnergy.add(0 - amount);
+}
 </script>
 
 <template>
@@ -43,17 +50,14 @@ const canAllocateEnergy = computed<boolean>(() => {
   >
   <div>
     <div
-      v-for="system in gameState.playerShip.systems"
+      v-for="system in gameState.playerShip.systems as ShipSystem[]"
       style="display: table; border: 1px solid black; margin: 5px; padding: 5px"
     >
       <div>{{ system.name }}</div>
       <div>
         <button
           :disabled="system.energy.getTemp() <= 0"
-          @click="
-            system.energy.addTemp(-1);
-            gameState.playerShip.turnEnergy.add(1);
-          "
+          @click="addTempEnergy(system, -1)"
         >
           -
         </button>
@@ -61,10 +65,7 @@ const canAllocateEnergy = computed<boolean>(() => {
           :disabled="
             gameState.playerShip.turnEnergy.get() <= 0 || system.energy.isFull()
           "
-          @click="
-            system.energy.addTemp(1);
-            gameState.playerShip.turnEnergy.add(-1);
-          "
+          @click="addTempEnergy(system, 1)"
         >
           +
         </button>

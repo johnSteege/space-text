@@ -1,9 +1,9 @@
 import { useGameStateStore } from "@/stores/gameState";
 import { useBattleStore } from "@/stores/battle";
 import {
-  type BoundedNumber,
   buildBoundedNumber,
   randomIntLinear,
+  type BoundedNumber,
 } from "./util";
 
 export type ShipSystemEnergy = {
@@ -83,7 +83,7 @@ export function fireWeapon(
 
   const damage = randomIntLinear(minDamage, maxDamage);
 
-  battle.phaseDefender.hp.add(damage);
+  battle.phaseDefender.hp.add(0 - damage);
   battle.battleText.push(`${battle.phaseDefender.name} took ${damage} damage.`);
 }
 
@@ -114,7 +114,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
     description: "NULL_SYSTEM",
     isWeapon: false,
     action: () => {},
-    hp: buildBoundedNumber(level),
+    hp: buildBoundedNumber(level, 0, level) as BoundedNumber,
     energy: makeShipSystemEnergy(9),
   };
 

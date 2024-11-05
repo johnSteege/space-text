@@ -15,8 +15,8 @@ export type Ship = {
 export function makeShip(id: ShipID): Ship {
   let ship: Ship = {
     name: "ErRoR",
-    hp: buildBoundedNumber(1),
-    turnEnergy: buildBoundedNumber(0),
+    hp: buildBoundedNumber(1, 0, 1),
+    turnEnergy: buildBoundedNumber(1, 0, 1),
     systems: [],
     items: [],
   };
@@ -33,8 +33,8 @@ export function makeShip(id: ShipID): Ship {
   switch (id) {
     case "scout1":
       ship.name = "Scout";
-      ship.hp = buildBoundedNumber(15);
-      ship.turnEnergy = buildBoundedNumber(5);
+      ship.hp = buildBoundedNumber(15, 0, 15);
+      ship.turnEnergy = buildBoundedNumber(5, 0, 5);
       ship.systems = [
         ...standardSystems,
         makeShipSystem("laser1", 1),
@@ -44,15 +44,15 @@ export function makeShip(id: ShipID): Ship {
       break;
     case "kestrel1":
       ship.name = "Kestrel";
-      ship.hp = buildBoundedNumber(15);
-      ship.turnEnergy = buildBoundedNumber(5);
+      ship.hp = buildBoundedNumber(15, 0, 15);
+      ship.turnEnergy = buildBoundedNumber(5, 0, 5);
       ship.systems = [...standardSystems, makeShipSystem("laser1", 1)];
       ship.items = [shipItems.potion, shipItems.torpedo];
       break;
     case "slug_1":
       ship.name = "Slug";
-      ship.hp = buildBoundedNumber(5);
-      ship.turnEnergy = buildBoundedNumber(4);
+      ship.hp = buildBoundedNumber(5, 0, 5);
+      ship.turnEnergy = buildBoundedNumber(4, 0, 4);
       ship.systems = [
         makeShipSystem("shields", 1),
         makeShipSystem("engines", 1),
