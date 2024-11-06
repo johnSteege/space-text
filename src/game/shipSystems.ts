@@ -75,9 +75,15 @@ export function fireWeapon(
   const gameState = useGameStateStore();
   const battle = useBattleStore();
 
-  const evasion = Math.max(0, 3 - accuracyModifier);
-  const hitChance = 100 - 5 * evasion;
-  const evadeRoll = randomIntLinear(0, 100);
+  const missChance = Math.max(0, 3 - accuracyModifier);
+  const hitChance = 100 - 5 * missChance;
+
+  let defenderEvasion: number = 0;
+  const defenderEngines = battle.phaseDefender.systems.engines;
+  if (defenderEngines) {
+    defenderEvasion = 30 * defenderEngines.charge;
+  }
+  const evadeRoll = randomIntLinear(defenderEvasion, 100);
 
   console.log(`evadeRoll: ${evadeRoll}, hitChance: ${hitChance}`);
 
@@ -89,8 +95,14 @@ export function fireWeapon(
 
   let damage = randomIntLinear(minDamage, maxDamage);
 
-  const defenderShields = useBattleStore().phaseAttacker.systems.shields;
+  const defenderShields = battle.phaseAttacker.systems.shields;
   if (defenderShields) {
+    const damageBlocked = Math.min(damage, defenderShields.charge);
+    if (damageBlocked > 0) {
+      battle.battleText.push(
+        `${battle.phaseDefender.name}'s shields blocked ${damageBlocked} damage.`
+      );
+    }
     damage = Math.max(0, damage - defenderShields.charge);
   }
 
@@ -117,7 +129,7 @@ export type ShipSystem = {
   action: () => void;
   hp: BoundedNumber;
   energy: ShipSystemEnergy;
-  charge: number; // TODO: reset at start & end of battle, show in UI
+  charge: number; // TODO:  show in UI
 };
 
 export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
@@ -125,7 +137,9 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
     name: "NULL_SYSTEM",
     description: "NULL_SYSTEM",
     isWeapon: false,
-    action: () => {},
+    action: function () {
+      this.charge += 1;
+    },
     hp: buildBoundedNumber(level, 0, level) as BoundedNumber,
     energy: makeShipSystemEnergy(9),
     charge: 0,
@@ -139,7 +153,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Quick and accurate light weapon.",
         isWeapon: true,
         action: () => {
-          fireWeapon(1, 1, 1);
+          fireWeapon(2, 1, 1);
         },
         energy: makeShipSystemEnergy(2),
       };
@@ -151,7 +165,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Powerful but inaccurate.",
         isWeapon: true,
         action: () => {
-          fireWeapon(0, 0, 3);
+          fireWeapon(0, 1, 3);
         },
         energy: makeShipSystemEnergy(3),
       };
@@ -162,12 +176,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Shields",
         description: "Blocks some types of weapons from reaching the ship.",
         isWeapon: false,
-        action: () => {
-          const shields = useBattleStore().phaseAttacker.systems.shields;
-          if (shields) {
-            shields.charge += 1;
-          }
-        },
         energy: makeShipSystemEnergy(4),
       };
       break;
@@ -177,7 +185,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Engines",
         description: "Increases the chance to dodge attacks.",
         isWeapon: false,
-        action: () => {},
         energy: makeShipSystemEnergy(3),
       };
       break;
@@ -187,7 +194,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Targeting Computer",
         description: "Improves weapon accuracy.",
         isWeapon: false,
-        action: () => {},
         energy: makeShipSystemEnergy(2),
       };
       break;
@@ -197,7 +203,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Reactor Power System",
         description: "Charges the reactor and provides extra power next turn.",
         isWeapon: false,
-        action: () => {},
         energy: makeShipSystemEnergy(5),
       };
       break;
@@ -208,7 +213,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description:
           "Repairs ship systems during battle, but cannot repair damage to the hull.",
         isWeapon: false,
-        action: () => {},
         energy: makeShipSystemEnergy(2),
       };
       break;
@@ -218,7 +222,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Sensors",
         description: "Gathers information about enemy ships.",
         isWeapon: false,
-        action: () => {},
         energy: makeShipSystemEnergy(3),
       };
       break;
@@ -228,7 +231,6 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Cloaking",
         description: "Grants 100% dodge for one turn.",
         isWeapon: false,
-        action: () => {},
         energy: makeShipSystemEnergy(8),
       };
       break;

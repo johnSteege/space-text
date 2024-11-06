@@ -41,9 +41,11 @@ export const useBattleStore = defineStore("battle", () => {
     // Set energy allocated of every system in both ships to 0.
     gameState.playerShip.getSystemArray().forEach((system) => {
       system.energy.resetTotal();
+      system.charge = 0;
     });
     enemy.value.getSystemArray().forEach((system) => {
       system.energy.resetTotal();
+      system.charge = 0;
     });
 
     gameState.isBattle = true;
