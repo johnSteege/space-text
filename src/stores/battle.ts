@@ -39,10 +39,10 @@ export const useBattleStore = defineStore("battle", () => {
     enemy.value = makeShip(enemyShipId);
 
     // Set energy allocated of every system in both ships to 0.
-    gameState.playerShip.systems.forEach((system) => {
+    gameState.playerShip.getSystemArray().forEach((system) => {
       system.energy.resetTotal();
     });
-    enemy.value.systems.forEach((system) => {
+    enemy.value.getSystemArray().forEach((system) => {
       system.energy.resetTotal();
     });
 
@@ -84,12 +84,15 @@ export const useBattleStore = defineStore("battle", () => {
     battleText.value.push(`The ${enemy.value.name} is charging its weapons.`);
 
     enemy.value.turnEnergy.setToMax();
-    const weapons: ShipSystem[] = enemy.value.systems.filter((s) => s.isWeapon);
+    const weapons: ShipSystem[] = enemy.value
+      .getSystemArray()
+      .filter((s) => s.isWeapon);
 
     while (enemy.value.turnEnergy.get() > 0) {
       let system = weapons.randomElement();
       if (system.energy.isFull()) {
-        system = enemy.value.systems
+        system = enemy.value
+          .getSystemArray()
           .filter((s) => !s.energy.isFull())
           .randomElement();
       }
@@ -99,7 +102,7 @@ export const useBattleStore = defineStore("battle", () => {
     }
 
     // Attack
-    enemy.value.systems.forEach((system) => {
+    enemy.value.getSystemArray().forEach((system) => {
       if (system.energy.isFull()) {
         system.action();
         system.energy.resetTotal();

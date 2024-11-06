@@ -9,19 +9,21 @@ import type { ShipSystem } from "@/game/shipSystems";
 const gameState = useGameStateStore();
 const battle = useBattleStore();
 
+const systemArray = ref<ShipSystem[]>(gameState.playerShip.getSystemArray());
+
 onMounted(() => {
   initPhaseEnergy();
 });
 
 function initPhaseEnergy(): void {
   gameState.playerShip.turnEnergy.setToMax();
-  gameState.playerShip.systems.forEach((system) => {
+  systemArray.value.forEach((system) => {
     system.energy.resetTemp();
   });
 }
 
 function applyPhaseEnergy(): void {
-  gameState.playerShip.systems.forEach((system) => {
+  systemArray.value.forEach((system) => {
     system.energy.fillTemp();
   });
 
@@ -31,7 +33,7 @@ function applyPhaseEnergy(): void {
 const canAllocateEnergy = computed<boolean>(() => {
   return (
     gameState.playerShip.turnEnergy.get() > 0 &&
-    gameState.playerShip.systems.some((s) => s.energy.getEmpty() > 0)
+    systemArray.value.some((s) => s.energy.getEmpty() > 0)
   );
 });
 
@@ -50,7 +52,7 @@ function addTempEnergy(system: ShipSystem, amount: number): void {
   >
   <div>
     <div
-      v-for="system in gameState.playerShip.systems as ShipSystem[]"
+      v-for="system in systemArray"
       style="display: table; border: 1px solid black; margin: 5px; padding: 5px"
     >
       <div>{{ system.name }}</div>

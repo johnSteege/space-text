@@ -87,7 +87,12 @@ export function fireWeapon(
     return;
   }
 
-  const damage = randomIntLinear(minDamage, maxDamage);
+  let damage = randomIntLinear(minDamage, maxDamage);
+
+  const defenderShields = useBattleStore().phaseAttacker.systems.shields;
+  if (defenderShields) {
+    damage = Math.max(0, damage - defenderShields.charge);
+  }
 
   battle.phaseDefender.hp.add(0 - damage);
   battle.battleText.push(`${battle.phaseDefender.name} took ${damage} damage.`);
@@ -112,6 +117,7 @@ export type ShipSystem = {
   action: () => void;
   hp: BoundedNumber;
   energy: ShipSystemEnergy;
+  charge: number; // TODO: reset at start & end of battle, show in UI
 };
 
 export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
@@ -122,6 +128,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
     action: () => {},
     hp: buildBoundedNumber(level, 0, level) as BoundedNumber,
     energy: makeShipSystemEnergy(9),
+    charge: 0,
   };
 
   switch (id) {
@@ -156,7 +163,10 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description: "Blocks some types of weapons from reaching the ship.",
         isWeapon: false,
         action: () => {
-          // Increase shield level
+          const shields = useBattleStore().phaseAttacker.systems.shields;
+          if (shields) {
+            shields.charge += 1;
+          }
         },
         energy: makeShipSystemEnergy(4),
       };
