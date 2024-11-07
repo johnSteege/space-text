@@ -8,14 +8,14 @@ import { buildBoundedNumber, type BoundedNumber } from "./util";
 
 export type ShipID = "error" | "scout1" | "kestrel1" | "slug_1";
 
-export type ShipSystemCollection = { [key in ShipSystemId]?: ShipSystem };
+export type ShipSystemMap = { [key in ShipSystemId]?: ShipSystem };
 
 export type Ship = {
   name: string;
   hp: BoundedNumber;
   turnEnergy: BoundedNumber;
-  systems: ShipSystemCollection;
-  weapons: ShipSystem[];
+  systems: ShipSystemMap; // Only one of each system can be present.
+  weapons: ShipSystem[]; // Multiple weapons of the same type can be present.
   getSystemArray(includeWeapons: boolean): ShipSystem[];
   items: ShipItem[];
 };
