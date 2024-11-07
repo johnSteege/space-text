@@ -9,7 +9,9 @@ import type { ShipSystem } from "@/game/shipSystems";
 const gameState = useGameStateStore();
 const battle = useBattleStore();
 
-const systemArray = ref<ShipSystem[]>(gameState.playerShip.getSystemArray());
+const systemArray = ref<ShipSystem[]>(
+  gameState.playerShip.getSystemArray(true)
+);
 
 onMounted(() => {
   initPhaseEnergy();

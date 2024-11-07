@@ -14,7 +14,9 @@ function doSystemAction(system: ShipSystem): void {
   system.action();
 }
 
-const systemArray = ref<ShipSystem[]>(gameState.playerShip.getSystemArray());
+const systemArray = ref<ShipSystem[]>(
+  gameState.playerShip.getSystemArray(true).filter((s) => s.energy.isFull())
+);
 </script>
 
 <template>

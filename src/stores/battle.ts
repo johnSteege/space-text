@@ -29,7 +29,6 @@ export const useBattleStore = defineStore("battle", () => {
     playerTurn: "playerResult",
     playerResult: "enemyTurn",
     enemyTurn: "playerEnergy",
-    // enemyResult: "playerEnergy",
   } as {
     [key: string]: string;
   };
@@ -39,11 +38,11 @@ export const useBattleStore = defineStore("battle", () => {
     enemy.value = makeShip(enemyShipId);
 
     // Set energy allocated of every system in both ships to 0.
-    gameState.playerShip.getSystemArray().forEach((system) => {
+    gameState.playerShip.getSystemArray(true).forEach((system) => {
       system.energy.resetTotal();
       system.charge = 0;
     });
-    enemy.value.getSystemArray().forEach((system) => {
+    enemy.value.getSystemArray(true).forEach((system) => {
       system.energy.resetTotal();
       system.charge = 0;
     });
@@ -91,7 +90,7 @@ export const useBattleStore = defineStore("battle", () => {
       let system = enemy.value.weapons.randomElement();
       if (system.energy.isFull()) {
         system = enemy.value
-          .getSystemArray()
+          .getSystemArray(true)
           .filter((s) => !s.energy.isFull())
           .randomElement();
       }
@@ -103,7 +102,7 @@ export const useBattleStore = defineStore("battle", () => {
     }
 
     // Attack
-    enemy.value.getSystemArray().forEach((system) => {
+    enemy.value.getSystemArray(true).forEach((system) => {
       if (system.energy.isFull()) {
         system.action();
         system.energy.resetTotal();
