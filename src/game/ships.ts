@@ -8,15 +8,15 @@ import { buildBoundedNumber, type BoundedNumber } from "./util";
 
 export type ShipID = "error" | "scout1" | "kestrel1" | "slug_1";
 
-export type ShipSystemCollection = { [key in ShipSystemId]?: ShipSystem }; // TODO
+export type ShipSystemCollection = { [key in ShipSystemId]?: ShipSystem };
 
 export type Ship = {
   name: string;
   hp: BoundedNumber;
   turnEnergy: BoundedNumber;
   systems: ShipSystemCollection;
+  weapons: ShipSystem[];
   getSystemArray(): ShipSystem[];
-  getWeaponArray(): ShipSystem[];
   items: ShipItem[];
 };
 
@@ -26,11 +26,9 @@ export function makeShip(id: ShipID): Ship {
     hp: buildBoundedNumber(1, 0, 1),
     turnEnergy: buildBoundedNumber(1, 0, 1),
     systems: {},
+    weapons: [],
     getSystemArray: function (): ShipSystem[] {
       return Object.values(this.systems);
-    },
-    getWeaponArray: function (): ShipSystem[] {
-      return Object.values(this.systems).filter((s) => s.isWeapon);
     },
     items: [],
   };
