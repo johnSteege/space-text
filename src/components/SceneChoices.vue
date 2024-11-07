@@ -2,17 +2,17 @@
 import { type Scene, type Choice } from "@/game/scenes";
 
 defineProps<{ sceneData: Scene }>();
-defineEmits(["choice-chosen"]);
+const emit = defineEmits(["choice-chosen"]);
+
+function onChoice(choice: Choice): void {
+  choice.action ? choice.action() : null;
+  emit("choice-chosen", choice);
+}
 </script>
 
 <template>
   <div v-for="choice in sceneData.choices" :key="choice.text">
-    <button
-      @click="
-        choice.action();
-        $emit('choice-chosen', choice);
-      "
-    >
+    <button @click="onChoice(choice)">
       {{ choice.text }}
     </button>
   </div>

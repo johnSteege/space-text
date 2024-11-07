@@ -6,7 +6,13 @@ import {
 } from "./shipSystems";
 import { buildBoundedNumber, type BoundedNumber } from "./util";
 
-export type ShipID = "error" | "scout1" | "kestrel1" | "slug_1";
+export type ShipID =
+  | "error"
+  | "scout"
+  | "kestrel"
+  | "rebel_a"
+  | "pirate_a"
+  | "slug_a";
 
 export type ShipSystemMap = { [key in ShipSystemId]?: ShipSystem };
 
@@ -43,7 +49,7 @@ export function makeShip(id: ShipID): Ship {
   };
 
   switch (id) {
-    case "scout1":
+    case "scout":
       ship.name = "Scout";
       ship.hp = buildBoundedNumber(15, 0, 15);
       ship.turnEnergy = buildBoundedNumber(2);
@@ -53,14 +59,32 @@ export function makeShip(id: ShipID): Ship {
       ];
       ship.items = [shipItems.potion, shipItems.torpedo];
       break;
-    case "kestrel1":
+    case "kestrel":
       ship.name = "Kestrel";
       ship.hp = buildBoundedNumber(15, 0, 15);
       ship.turnEnergy = buildBoundedNumber(2);
       ship.weapons = [makeShipSystem("laser1", 1)];
       ship.items = [shipItems.potion, shipItems.torpedo];
       break;
-    case "slug_1":
+    case "rebel_a":
+      ship.name = "Slug";
+      ship.hp = buildBoundedNumber(5, 0, 5);
+      ship.turnEnergy = buildBoundedNumber(2);
+      ship.weapons = [
+        makeShipSystem("laser1", 1),
+        makeShipSystem("torpedo1", 1),
+      ];
+      break;
+    case "pirate_a":
+      ship.name = "Slug";
+      ship.hp = buildBoundedNumber(5, 0, 5);
+      ship.turnEnergy = buildBoundedNumber(2);
+      ship.weapons = [
+        makeShipSystem("laser1", 1),
+        makeShipSystem("torpedo1", 1),
+      ];
+      break;
+    case "slug_a":
       ship.name = "Slug";
       ship.hp = buildBoundedNumber(5, 0, 5);
       ship.turnEnergy = buildBoundedNumber(2);

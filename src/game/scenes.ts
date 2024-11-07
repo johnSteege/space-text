@@ -3,7 +3,7 @@ import { useBattleStore } from "@/stores/battle";
 
 export type Choice = {
   text: string;
-  action: () => void;
+  action?: () => void;
   nextSceneId: string;
 };
 
@@ -19,7 +19,7 @@ const scenes: Scene[] = [
     id: "intro",
     type: "intro",
     text: "Welcome to Space Text",
-    choices: [{ text: "Start", action: () => {}, nextSceneId: "dialogue1" }],
+    choices: [{ text: "Start", nextSceneId: "dialogue1" }],
   },
   {
     id: "gameOver",
@@ -62,7 +62,7 @@ const scenes: Scene[] = [
       {
         text: "Start battle",
         action: () => {
-          useBattleStore().startBattle("slug_1");
+          useBattleStore().startBattle("slug_a");
         },
         nextSceneId: "battle",
       },

@@ -21,8 +21,8 @@ function newSave(shipId: ShipID): void {
   <h1>New Game</h1>
   <h2>Choose Ship</h2>
 
-  <button @click="newSave('scout1')">Scout</button>
-  <button @click="newSave('kestrel1')">Kestrel</button>
+  <button @click="newSave('scout')">Scout</button>
+  <button @click="newSave('kestrel')">Kestrel</button>
 </template>
 
 <style scoped>
