@@ -3,9 +3,9 @@ const props = defineProps<{ disabled?: boolean }>();
 </script>
 
 <template>
-  <div>
+  <span>
     <button :disabled="props.disabled" @click="$emit('action')">
       <slot></slot>
     </button>
-  </div>
+  </span>
 </template>

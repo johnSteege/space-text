@@ -78,6 +78,7 @@ export function fireWeapon(
   const missChance = Math.max(0, 3 - accuracyModifier);
   const hitChance = 100 - 5 * missChance;
 
+  // EVASION
   let defenderEvasion: number = 0;
   const defenderEngines = battle.phaseDefender.systems.engines;
   if (defenderEngines) {
@@ -95,10 +96,12 @@ export function fireWeapon(
 
   let damage = randomIntLinear(minDamage, maxDamage);
 
-  const defenderShields = battle.phaseAttacker.systems.shields;
+  // SHIELDS
+  const defenderShields = battle.phaseDefender.systems.shields;
   if (defenderShields) {
     const damageBlocked = Math.min(damage, defenderShields.charge);
     if (damageBlocked > 0) {
+      defenderShields.charge -= damageBlocked;
       battle.battleText.push(
         `${battle.phaseDefender.name}'s shields blocked ${damageBlocked} damage.`
       );
@@ -129,7 +132,7 @@ export type ShipSystem = {
   action: () => void;
   hp: BoundedNumber;
   energy: ShipSystemEnergy;
-  charge: number; // TODO:  show in UI
+  charge: number;
 };
 
 export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
@@ -155,7 +158,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           fireWeapon(2, 1, 1);
         },
-        energy: makeShipSystemEnergy(2),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "torpedo1":
@@ -167,7 +170,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         action: () => {
           fireWeapon(0, 1, 3);
         },
-        energy: makeShipSystemEnergy(3),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "shields":
@@ -176,7 +179,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Shields",
         description: "Blocks some types of weapons from reaching the ship.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(4),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "engines":
@@ -185,16 +188,16 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Engines",
         description: "Increases the chance to dodge attacks.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(3),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "targeting":
       system = {
         ...system,
         name: "Targeting Computer",
-        description: "Improves weapon accuracy.",
+        description: "Weapons target higher priority systems.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(2),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "power":
@@ -203,7 +206,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Reactor Power System",
         description: "Charges the reactor and provides extra power next turn.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(5),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "repair":
@@ -213,7 +216,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         description:
           "Repairs ship systems during battle, but cannot repair damage to the hull.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(2),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "sensors":
@@ -222,7 +225,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Sensors",
         description: "Gathers information about enemy ships.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(3),
+        energy: makeShipSystemEnergy(1),
       };
       break;
     case "cloaking":
@@ -231,7 +234,7 @@ export function makeShipSystem(id: ShipSystemId, level: number): ShipSystem {
         name: "Cloaking",
         description: "Grants 100% dodge for one turn.",
         isWeapon: false,
-        energy: makeShipSystemEnergy(8),
+        energy: makeShipSystemEnergy(1),
       };
       break;
   }

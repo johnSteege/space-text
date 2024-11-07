@@ -56,6 +56,7 @@ function addTempEnergy(system: ShipSystem, amount: number): void {
       style="display: table; border: 1px solid black; margin: 5px; padding: 5px"
     >
       <div>{{ system.name }}</div>
+      <span>Charges: {{ system.charge }}</span>
       <div>
         <button
           :disabled="system.energy.getTemp() <= 0"

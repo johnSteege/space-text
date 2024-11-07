@@ -16,6 +16,7 @@ export type Ship = {
   turnEnergy: BoundedNumber;
   systems: ShipSystemCollection;
   getSystemArray(): ShipSystem[];
+  getWeaponArray(): ShipSystem[];
   items: ShipItem[];
 };
 
@@ -28,14 +29,14 @@ export function makeShip(id: ShipID): Ship {
     getSystemArray: function (): ShipSystem[] {
       return Object.values(this.systems);
     },
+    getWeaponArray: function (): ShipSystem[] {
+      return Object.values(this.systems).filter((s) => s.isWeapon);
+    },
     items: [],
   };
 
   const basicSystems = {
     shields: makeShipSystem("shields", 1),
-    engines: makeShipSystem("engines", 1),
-    targeting: makeShipSystem("targeting", 1),
-    power: makeShipSystem("power", 1),
     repair: makeShipSystem("repair", 1),
     sensors: makeShipSystem("sensors", 1),
   } as { [key in ShipSystemId]: ShipSystem };
@@ -44,7 +45,7 @@ export function makeShip(id: ShipID): Ship {
     case "scout1":
       ship.name = "Scout";
       ship.hp = buildBoundedNumber(15, 0, 15);
-      ship.turnEnergy = buildBoundedNumber(5, 0, 5);
+      ship.turnEnergy = buildBoundedNumber(2);
       ship.systems = {
         ...basicSystems,
         laser1: makeShipSystem("laser1", 1),
@@ -55,7 +56,7 @@ export function makeShip(id: ShipID): Ship {
     case "kestrel1":
       ship.name = "Kestrel";
       ship.hp = buildBoundedNumber(15, 0, 15);
-      ship.turnEnergy = buildBoundedNumber(5, 0, 5);
+      ship.turnEnergy = buildBoundedNumber(2);
       ship.systems = {
         ...basicSystems,
         laser1: makeShipSystem("laser1", 1),
@@ -65,7 +66,7 @@ export function makeShip(id: ShipID): Ship {
     case "slug_1":
       ship.name = "Slug";
       ship.hp = buildBoundedNumber(5, 0, 5);
-      ship.turnEnergy = buildBoundedNumber(4, 0, 4);
+      ship.turnEnergy = buildBoundedNumber(2);
       ship.systems = {
         ...basicSystems,
         laser1: makeShipSystem("laser1", 1),

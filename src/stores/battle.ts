@@ -86,9 +86,7 @@ export const useBattleStore = defineStore("battle", () => {
     battleText.value.push(`The ${enemy.value.name} is charging its weapons.`);
 
     enemy.value.turnEnergy.setToMax();
-    const weapons: ShipSystem[] = enemy.value
-      .getSystemArray()
-      .filter((s) => s.isWeapon);
+    const weapons: ShipSystem[] = enemy.value.getWeaponArray();
 
     while (enemy.value.turnEnergy.get() > 0) {
       let system = weapons.randomElement();

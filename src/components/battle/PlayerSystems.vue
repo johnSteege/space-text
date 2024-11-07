@@ -20,13 +20,14 @@ const systemArray = ref<ShipSystem[]>(gameState.playerShip.getSystemArray());
 <template>
   <BattlePhaseText>System Actions</BattlePhaseText>
 
-  <BattleChoice
-    v-for="(system, index) in systemArray"
-    :key="index"
-    :disabled="!system.energy.isFull()"
-    @action.once="doSystemAction(system)"
-    >{{ system.name }}</BattleChoice
-  >
+  <div v-for="(system, index) in systemArray" :key="index">
+    <BattleChoice
+      :disabled="!system.energy.isFull()"
+      @action.once="doSystemAction(system)"
+      >{{ system.name }}</BattleChoice
+    >
+    <span>Charges: {{ system.charge }}</span>
+  </div>
 
   <BattleChoice @action.once="battle.nextPhase">Continue</BattleChoice>
 </template>
